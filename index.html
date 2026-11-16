@@ -1,0 +1,2498 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>EDUNOVA — Learning Management System</title>
+  <meta name="theme-color" content="#5B45E0" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+
+  <!-- PWA Manifest via Data URI (Single-File Mandate) -->
+  <link rel="manifest" href='data:application/manifest+json;charset=utf-8,%7B%22name%22%3A%22SMP%20Academy%20LMS%22%2C%22short_name%22%3A%22SMP%20Academy%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23F7F8FC%22%2C%22theme_color%22%3A%22%235B45E0%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22data%3Aimage%2Fsvg%2Bxml%3Butf8%2C%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%20100%20100%27%3E%3Crect%20width%3D%27100%27%20height%3D%27100%27%20rx%3D%2724%27%20fill%3D%27%25235B45E0%27%2F%3E%3Cpath%20d%3D%27M50%2026L18%2042l32%2016%2026-13v19h6V42L50%2026zm-18%2037v11c0%207%208%2012%2018%2012s18-5%2018-12V63L50%2072%2032%2063z%27%20fill%3D%27white%27%2F%3E%3C%2Fsvg%3E%22%2C%22sizes%22%3A%22192x192%22%2C%22type%22%3A%22image%2Fsvg%2Bxml%22%7D%5D%7D' />
+
+  <!-- Google Fonts: Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              DEFAULT: '#5B45E0',
+              hover: '#4328D9',
+              soft: '#EEF0FF',
+            },
+            canvas: '#F7F8FC',
+          },
+          boxShadow: {
+            soft: '0 4px 20px -2px rgba(15, 23, 42, 0.04)',
+            glass: '0 8px 32px rgba(31, 38, 135, 0.08)',
+          }
+        }
+      }
+    };
+  </script>
+
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    /* =====================================================================
+       FULL-PAGE BLOGGER OVERRIDE & DESIGN TOKENS
+       Menutupi 100% elemen bawaan Blogger tanpa perlu mengedit XML Template
+       ===================================================================== */
+    html, body {
+      margin: 0 !important;
+      padding: 0 !important;
+      overflow: hidden !important;
+      background-color: #F7F8FC !important;
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif !important;
+      color: #0F172A;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    #lms-root-app {
+      position: fixed;
+      inset: 0;
+      z-index: 999999;
+      background-color: #F7F8FC;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* Glassmorphism Utilities */
+    .glass-panel {
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid rgba(255, 255, 255, 0.7);
+    }
+
+    .glass-nav-mobile {
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(226, 232, 240, 0.85);
+      box-shadow: 0 10px 30px -5px rgba(15, 23, 42, 0.12);
+    }
+
+    .live-card-gradient {
+      background: linear-gradient(135deg, #6347F9 0%, #4328D9 100%);
+    }
+
+    /* Custom Scrollbar Rapi */
+    .custom-scroll::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    .custom-scroll::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    .custom-scroll::-webkit-scrollbar-thumb {
+      background: #CBD5E1;
+      border-radius: 9999px;
+    }
+    .custom-scroll::-webkit-scrollbar-thumb:hover {
+      background: #94A3B8;
+    }
+
+    /* Responsive Layout Media Queries */
+    @media (max-width: 1023px) {
+      .desktop-sidebar {
+        display: none !important;
+      }
+      .mobile-bottom-nav {
+        display: flex !important;
+      }
+      .main-scroll-area {
+        padding-bottom: 96px !important;
+      }
+    }
+
+    @media (min-width: 1024px) {
+      .desktop-sidebar {
+        display: flex !important;
+      }
+      .mobile-bottom-nav {
+        display: none !important;
+      }
+    }
+
+    @media (max-width: 1279px) {
+      .desktop-right-panel {
+        display: none !important;
+      }
+    }
+
+    @media (min-width: 1280px) {
+      .desktop-right-panel {
+        display: flex !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Root Container Fullscreen -->
+  <div id="lms-root-app"></div>
+
+  <!-- =====================================================================
+       SCRIPT UTAMA APLIKASI (ES MODULE + SUPABASE + PWA SERVICE WORKER)
+       ===================================================================== -->
+  <script type="module">
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+
+    /**
+     * =====================================================================
+     * 1. SAKLAR DEPLOYMENT & KONFIGURASI SUPABASE
+     * Ubah IS_PREVIEW menjadi false SAAT DEPLOY agar seluruh indikator
+     * preview & data dummy hilang dan terhubung 100% ke Supabase.
+     * =====================================================================
+     */
+    const IS_PREVIEW = false;
+    const SUPABASE_URL = "https://lmkmyhrxyxjzutkcaqaz.supabase.co/";
+    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imxta215aHJ4eXhqenV0a2NhcWF6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTQ4MzA1NTEsImV4cCI6MjExMDQwNjU1MX0.nd6wJQPKWuXTgQXWEN1lEIeLvHO8h72PdtI4Rbdib9k";
+
+    // Inisialisasi Client Supabase (Hanya aktif saat IS_PREVIEW === false)
+    let supabase = null;
+    if (!IS_PREVIEW) {
+      try {
+        supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+      } catch (err) {
+        console.error("Gagal menginisialisasi Supabase:", err);
+      }
+    }
+
+    /**
+     * =====================================================================
+     * 2. PENDAFTARAN SERVICE WORKER PWA SECARA DINAMIS (BLOB)
+     * =====================================================================
+     */
+    if ('serviceWorker' in navigator) {
+      const swCode = `
+        const CACHE_NAME = 'smp-academy-lms-v1';
+        self.addEventListener('install', (e) => {
+          self.skipWaiting();
+        });
+        self.addEventListener('activate', (e) => {
+          e.waitUntil(clients.claim());
+        });
+        self.addEventListener('fetch', (e) => {
+          // Network-first strategy agar data Supabase selalu real-time
+          e.respondWith(
+            fetch(e.request).catch(() => caches.match(e.request))
+          );
+        });
+      `;
+      try {
+        const blob = new Blob([swCode], { type: 'application/javascript' });
+        const swUrl = URL.createObjectURL(blob);
+        navigator.serviceWorker.register(swUrl).catch(() => {});
+      } catch (e) {
+        // Abaikan jika dijalankan di sandbox tanpa izin SW
+      }
+    }
+
+    /**
+     * =====================================================================
+     * 3. DATA DUMMY MINIMALIS (HANYA AKTIF JIKA IS_PREVIEW === true)
+     * Aturan Ketat: Maksimal 1-2 baris data per tabel untuk pengujian UI.
+     * =====================================================================
+     */
+    const PREVIEW_STORE = IS_PREVIEW ? {
+      siswa: [
+        {
+          id: '11111111-1111-1111-1111-111111111111',
+          nisn: '0081234567',
+          nama_lengkap: 'Rafi Pratama',
+          kelas: 'Kelas 8A',
+          password: '123',
+          poin: 180,
+          status: 'Aktif'
+        },
+        {
+          id: '22222222-2222-2222-2222-222222222222',
+          nisn: '0097654321',
+          nama_lengkap: 'Nadia Putri',
+          kelas: 'Kelas 7B',
+          password: '123',
+          poin: 120,
+          status: 'Aktif'
+        }
+      ],
+      courses: [
+        {
+          id: 'c1111111-1111-1111-1111-111111111111',
+          judul: 'Teorema Pythagoras & Segitiga Siku-Siku',
+          mapel: 'Matematika',
+          jenjang: 'Kelas 8',
+          kategori: 'Dasar',
+          durasi: '15 menit',
+          guru_pengampu: 'Budi Santoso, S.Pd.',
+          konten_materi: 'Teorema Pythagoras menyatakan bahwa pada setiap segitiga siku-siku, kuadrat panjang sisi miring (hipotenusa) sama dengan jumlah kuadrat panjang kedua sisi penyikunya.\n\nRumus Utama:\nc² = a² + b²\n\nContoh Penerapan:\nJika panjang alas a = 3 cm dan tinggi b = 4 cm, maka sisi miring c = √(3² + 4²) = √(9 + 16) = √25 = 5 cm. Triple Pythagoras dasar antara lain (3,4,5), (5,12,13), dan (8,15,17).',
+          video_url: ''
+        },
+        {
+          id: 'c2222222-2222-2222-2222-222222222222',
+          judul: 'Zat, Wujud Benda & Perubahannya',
+          mapel: 'IPA Terpadu',
+          jenjang: 'Kelas 7',
+          kategori: 'Praktik',
+          durasi: '20 menit',
+          guru_pengampu: 'Siti Aminah, M.Pd.',
+          konten_materi: 'Materi adalah segala sesuatu yang menempati ruang dan memiliki massa. Berdasarkan wujudnya, zat dibedakan menjadi tiga: Padat, Cair, dan Gas.\n\n1. Zat Padat: Bentuk dan volume tetap, partikel tersusun sangat rapat.\n2. Zat Cair: Volume tetap, bentuk mengikuti wadahnya.\n3. Zat Gas: Bentuk dan volume berubah-ubah memenuhi ruangan.\n\nPerubahan fisika tidak menghasilkan zat baru (contoh: es mencair), sedangkan perubahan kimia menghasilkan zat baru (contoh: kertas terbakar).',
+          video_url: ''
+        }
+      ],
+      kuis_soal: [
+        {
+          id: 'q1111111-1111-1111-1111-111111111111',
+          course_id: 'c1111111-1111-1111-1111-111111111111',
+          pertanyaan: 'Sebuah segitiga siku-siku memiliki panjang sisi penyiku 6 cm dan 8 cm. Berapakah panjang sisi miringnya?',
+          opsi_a: '10 cm',
+          opsi_b: '12 cm',
+          opsi_c: '14 cm',
+          opsi_d: '48 cm',
+          kunci_jawaban: 'A',
+          pembahasan: 'c = √(6² + 8²) = √(36 + 64) = √100 = 10 cm.'
+        },
+        {
+          id: 'q2222222-2222-2222-2222-222222222222',
+          course_id: 'c2222222-2222-2222-2222-222222222222',
+          pertanyaan: 'Perubahan wujud dari gas menjadi cair disebut peristiwa...',
+          opsi_a: 'Menyublim',
+          opsi_b: 'Mengembun',
+          opsi_c: 'Menguap',
+          opsi_d: 'Membeku',
+          kunci_jawaban: 'B',
+          pembahasan: 'Mengembun (kondensasi) adalah perubahan wujud benda dari gas menjadi cair akibat pelepasan kalor.'
+        }
+      ],
+      progres_nilai: [
+        {
+          id: 'p1111111-1111-1111-1111-111111111111',
+          siswa_id: '11111111-1111-1111-1111-111111111111',
+          course_id: 'c1111111-1111-1111-1111-111111111111',
+          status_selesai: true,
+          skor_kuis: 100
+        }
+      ],
+      tools_pustaka: [
+        {
+          id: 't1111111-1111-1111-1111-111111111111',
+          judul: 'Simulasi PhET Laboratorium IPA Virtual',
+          jenis: 'tool',
+          kategori: 'Lab Sains',
+          deskripsi: 'Eksperimen interaktif fisika, kimia, dan biologi untuk siswa SMP.',
+          tautan_url: 'https://phet.colorado.edu/in/'
+        },
+        {
+          id: 't2222222-2222-2222-2222-222222222222',
+          judul: 'LKPD Praktikum Pythagoras & Rangkuman Rumus',
+          jenis: 'template',
+          kategori: 'Matematika Kelas 8',
+          deskripsi: 'Lembar Kerja Peserta Didik dan lembar catatan siap cetak.',
+          tautan_url: 'https://docs.google.com'
+        }
+      ],
+      jadwal_live: [
+        {
+          id: 'j1111111-1111-1111-1111-111111111111',
+          judul_sesi: 'Bedah Soal Olimpiade & AKM Matematika',
+          mapel: 'Matematika',
+          pengajar: 'Budi Santoso, S.Pd.',
+          tanggal: new Date().toISOString().split('T')[0],
+          waktu_wib: 'Setiap Hari, 19.30 WIB',
+          link_meeting: 'https://meet.google.com',
+          is_highlight: true
+        },
+        {
+          id: 'j2222222-2222-2222-2222-222222222222',
+          judul_sesi: 'Klinik Sains & Persiapan Ujian IPA',
+          mapel: 'IPA Terpadu',
+          pengajar: 'Siti Aminah, M.Pd.',
+          tanggal: new Date(Date.now() + 86400000 * 2).toISOString().split('T')[0],
+          waktu_wib: 'Rabu, 16.00 WIB',
+          link_meeting: 'https://meet.google.com',
+          is_highlight: false
+        }
+      ]
+    } : null;
+
+    /**
+     * =====================================================================
+     * 4. STATE APLIKASI TERPUSAT
+     * =====================================================================
+     */
+    const state = {
+      isAuthenticated: false,
+      role: null, // 'admin' | 'siswa'
+      user: null, // Object profil Admin atau baris tabel siswa
+      loginTab: 'siswa', // 'siswa' | 'admin'
+      activeMenu: 'dashboard', // 'dashboard' | 'courses' | 'tools' | 'template' | 'market' | 'schedule' | 'help' | 'admin_panel'
+      adminSubTab: 'courses', // 'courses' | 'siswa' | 'kuis' | 'pustaka' | 'jadwal' | 'rekap'
+      searchQuery: '',
+      filterJenjang: 'Semua',
+      calendarDate: new Date(),
+      selectedDay: new Date().getDate(),
+      loading: false,
+
+      // Data utama dari Supabase atau PREVIEW_STORE
+      data: {
+        siswa: [],
+        courses: [],
+        kuis_soal: [],
+        progres_nilai: [],
+        tools_pustaka: [],
+        jadwal_live: []
+      },
+
+      // State Modal Belajar & Kuis CBT
+      activeCourseModal: null, // object course
+      courseModalTab: 'materi', // 'materi' | 'kuis'
+      quizAnswers: {},
+      quizSubmitted: false,
+      quizScore: 0,
+
+      // State Modal Konfirmasi Kustom (Pengganti confirm())
+      confirmModal: null, // { title, message, onConfirm }
+
+      // State Mobile Drawer untuk Profil & Kalender
+      mobileUtilityOpen: false,
+
+      // State Kalkulator & Lab Mini di Menu Tools
+      calcInput: '',
+      calcResult: '0',
+      tempCelsius: 25
+    };
+
+    /**
+     * =====================================================================
+     * 5. SISTEM NOTIFIKASI TOAST & MODAL KONFIRMASI (ANTI ALERT/CONFIRM)
+     * =====================================================================
+     */
+    function showToast(message, type = 'success') {
+      const existing = document.getElementById('lms-toast');
+      if (existing) existing.remove();
+
+      const colors = {
+        success: 'bg-slate-900 text-white border-slate-700',
+        error: 'bg-rose-600 text-white border-rose-500',
+        info: 'bg-[#5B45E0] text-white border-indigo-400'
+      };
+
+      const toast = document.createElement('div');
+      toast.id = 'lms-toast';
+      toast.className = `fixed top-5 right-5 z-[1000005] flex items-center gap-3 px-4 py-3 rounded-2xl shadow-xl border text-sm font-medium transition-all duration-300 transform translate-y-0 ${colors[type] || colors.success}`;
+      toast.innerHTML = `
+        <span class="w-2 h-2 rounded-full bg-white animate-pulse"></span>
+        <span>${escapeHtml(message)}</span>
+      `;
+      document.body.appendChild(toast);
+
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateY(-10px)';
+        setTimeout(() => toast.remove(), 300);
+      }, 3200);
+    }
+
+    function openConfirmDialog(title, message, onConfirm) {
+      state.confirmModal = { title, message, onConfirm };
+      renderApp();
+    }
+
+    function closeConfirmDialog() {
+      state.confirmModal = null;
+      renderApp();
+    }
+
+    function escapeHtml(str) {
+      if (str === null || str === undefined) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    /**
+     * =====================================================================
+     * 6. SINKRONISASI DATA (PREVIEW LOKAL vs SUPABASE PRODUCTION)
+     * =====================================================================
+     */
+    async function loadAllData() {
+      state.loading = true;
+      renderApp();
+
+      try {
+        if (IS_PREVIEW) {
+          // Gunakan salinan memori lokal saat Mode Preview aktif
+          state.data.siswa = [...PREVIEW_STORE.siswa];
+          state.data.courses = [...PREVIEW_STORE.courses];
+          state.data.kuis_soal = [...PREVIEW_STORE.kuis_soal];
+          state.data.progres_nilai = [...PREVIEW_STORE.progres_nilai];
+          state.data.tools_pustaka = [...PREVIEW_STORE.tools_pustaka];
+          state.data.jadwal_live = [...PREVIEW_STORE.jadwal_live];
+        } else {
+          // 100% Query Real-Time ke Supabase saat Produksi
+          const [
+            resSiswa,
+            resCourses,
+            resKuis,
+            resProgres,
+            resPustaka,
+            resJadwal
+          ] = await Promise.all([
+            supabase.from('siswa').select('*').order('created_at', { ascending: false }),
+            supabase.from('courses').select('*').order('created_at', { ascending: false }),
+            supabase.from('kuis_soal').select('*'),
+            supabase.from('progres_nilai').select('*'),
+            supabase.from('tools_pustaka').select('*').order('created_at', { ascending: false }),
+            supabase.from('jadwal_live').select('*').order('tanggal', { ascending: true })
+          ]);
+
+          if (resSiswa.error) throw resSiswa.error;
+          if (resCourses.error) throw resCourses.error;
+
+          state.data.siswa = resSiswa.data || [];
+          state.data.courses = resCourses.data || [];
+          state.data.kuis_soal = resKuis.data || [];
+          state.data.progres_nilai = resProgres.data || [];
+          state.data.tools_pustaka = resPustaka.data || [];
+          state.data.jadwal_live = resJadwal.data || [];
+
+          // Perbarui data profil siswa aktif jika role adalah siswa
+          if (state.role === 'siswa' && state.user) {
+            const freshSiswa = state.data.siswa.find(s => s.id === state.user.id);
+            if (freshSiswa) {
+              state.user = freshSiswa;
+              localStorage.setItem('smp_lms_siswa_session', JSON.stringify(freshSiswa));
+            }
+          }
+        }
+      } catch (err) {
+        console.error('Error memuat data:', err);
+        showToast('Gagal memuat data dari server: ' + (err.message || 'Periksa koneksi'), 'error');
+      } finally {
+        state.loading = false;
+        renderApp();
+      }
+    }
+
+    /**
+     * =====================================================================
+     * 7. HYBRID AUTHENTICATION (ADMIN VIA SUPABASE AUTH, SISWA VIA TABEL)
+     * =====================================================================
+     */
+    async function checkInitialSession() {
+      if (IS_PREVIEW) {
+        renderApp();
+        return;
+      }
+
+      try {
+        // 1. Cek Session Admin Supabase Auth
+        const { data: { session } } = await supabase.auth.getSession();
+        if (session && session.user) {
+          state.isAuthenticated = true;
+          state.role = 'admin';
+          state.user = {
+            id: session.user.id,
+            email: session.user.email,
+            nama_lengkap: session.user.email.split('@')[0],
+            jabatan: 'Guru / Administrator'
+          };
+          await loadAllData();
+          return;
+        }
+
+        // 2. Cek Session Siswa tersimpan di localStorage & validasi ke tabel siswa
+        const savedSiswa = localStorage.getItem('smp_lms_siswa_session');
+        if (savedSiswa) {
+          const parsed = JSON.parse(savedSiswa);
+          const { data, error } = await supabase
+            .from('siswa')
+            .select('*')
+            .eq('id', parsed.id)
+            .single();
+
+          if (data && !error) {
+            state.isAuthenticated = true;
+            state.role = 'siswa';
+            state.user = data;
+            await loadAllData();
+            return;
+          } else {
+            localStorage.removeItem('smp_lms_siswa_session');
+          }
+        }
+      } catch (e) {
+        console.error('Session check error:', e);
+      }
+
+      renderApp();
+    }
+
+    async function handleLoginSubmit(e) {
+      e.preventDefault();
+      const form = e.target;
+
+      if (state.loginTab === 'siswa') {
+        const nisn = form.nisn.value.trim();
+        const password = form.password.value.trim();
+
+        if (!nisn || !password) {
+          showToast('Masukkan NISN/Username dan Password siswa.', 'error');
+          return;
+        }
+
+        state.loading = true;
+        renderApp();
+
+        try {
+          if (IS_PREVIEW) {
+            const found = PREVIEW_STORE.siswa.find(
+              s => s.nisn === nisn && s.password === password
+            );
+            if (!found) throw new Error('NISN atau Password tidak cocok (Mode Preview).');
+            state.isAuthenticated = true;
+            state.role = 'siswa';
+            state.user = { ...found };
+            state.activeMenu = 'dashboard';
+            await loadAllData();
+            showToast(`Selamat datang kembali, ${found.nama_lengkap}!`);
+          } else {
+            const { data, error } = await supabase
+              .from('siswa')
+              .select('*')
+              .eq('nisn', nisn)
+              .eq('password', password)
+              .maybeSingle();
+
+            if (error) throw error;
+            if (!data) throw new Error('NISN atau Password siswa tidak ditemukan.');
+
+            state.isAuthenticated = true;
+            state.role = 'siswa';
+            state.user = data;
+            state.activeMenu = 'dashboard';
+            localStorage.setItem('smp_lms_siswa_session', JSON.stringify(data));
+            await loadAllData();
+            showToast(`Berhasil masuk sebagai ${data.nama_lengkap}`);
+          }
+        } catch (err) {
+          state.loading = false;
+          renderApp();
+          showToast(err.message || 'Gagal masuk sebagai siswa.', 'error');
+        }
+      } else {
+        // Login Admin / Guru via Supabase Auth
+        const email = form.email.value.trim();
+        const password = form.password.value.trim();
+
+        if (!email || !password) {
+          showToast('Masukkan Email dan Password Guru/Admin.', 'error');
+          return;
+        }
+
+        state.loading = true;
+        renderApp();
+
+        try {
+          if (IS_PREVIEW) {
+            state.isAuthenticated = true;
+            state.role = 'admin';
+            state.user = {
+              id: 'admin-preview',
+              email: email,
+              nama_lengkap: 'Budi Santoso, S.Pd.',
+              jabatan: 'Guru & Admin LMS'
+            };
+            state.activeMenu = 'dashboard';
+            await loadAllData();
+            showToast('Berhasil masuk sebagai Guru / Admin (Preview).');
+          } else {
+            const { data, error } = await supabase.auth.signInWithPassword({
+              email,
+              password
+            });
+            if (error) throw error;
+
+            state.isAuthenticated = true;
+            state.role = 'admin';
+            state.user = {
+              id: data.user.id,
+              email: data.user.email,
+              nama_lengkap: data.user.email.split('@')[0],
+              jabatan: 'Guru / Administrator'
+            };
+            state.activeMenu = 'dashboard';
+            await loadAllData();
+            showToast('Login Guru / Admin berhasil!');
+          }
+        } catch (err) {
+          state.loading = false;
+          renderApp();
+          showToast(err.message || 'Email atau password admin salah.', 'error');
+        }
+      }
+    }
+
+    // Quick Login hanya dirender & aktif jika IS_PREVIEW === true
+    async function quickPreviewLogin(targetRole) {
+      if (!IS_PREVIEW) return;
+      if (targetRole === 'siswa') {
+        const s = PREVIEW_STORE.siswa[0];
+        state.isAuthenticated = true;
+        state.role = 'siswa';
+        state.user = { ...s };
+        state.activeMenu = 'dashboard';
+        await loadAllData();
+        showToast(`Masuk cepat sebagai Siswa: ${s.nama_lengkap}`);
+      } else {
+        state.isAuthenticated = true;
+        state.role = 'admin';
+        state.user = {
+          id: 'admin-preview',
+          email: 'guru@smpacademy.sch.id',
+          nama_lengkap: 'Budi Santoso, S.Pd.',
+          jabatan: 'Guru & Admin LMS'
+        };
+        state.activeMenu = 'dashboard';
+        await loadAllData();
+        showToast('Masuk cepat sebagai Guru / Admin');
+      }
+    }
+
+    async function handleLogout() {
+      openConfirmDialog(
+        'Keluar dari Aplikasi?',
+        'Sesi belajar Anda akan diakhiri. Anda dapat masuk kembali kapan saja.',
+        async () => {
+          closeConfirmDialog();
+          if (!IS_PREVIEW && state.role === 'admin' && supabase) {
+            await supabase.auth.signOut();
+          }
+          localStorage.removeItem('smp_lms_siswa_session');
+          state.isAuthenticated = false;
+          state.role = null;
+          state.user = null;
+          state.activeCourseModal = null;
+          renderApp();
+          showToast('Anda telah keluar dari SMP Academy.', 'info');
+        }
+      );
+    }
+
+    /**
+     * =====================================================================
+     * 8. FITUR PEMBELAJARAN SISWA: BUKA MATERI, SELESAI & KUIS CBT
+     * =====================================================================
+     */
+    function openCoursePlayer(courseId) {
+      const course = state.data.courses.find(c => c.id === courseId);
+      if (!course) return;
+      state.activeCourseModal = course;
+      state.courseModalTab = 'materi';
+      state.quizAnswers = {};
+      state.quizSubmitted = false;
+      state.quizScore = 0;
+      renderApp();
+    }
+
+    function closeCoursePlayer() {
+      state.activeCourseModal = null;
+      renderApp();
+    }
+
+    async function markCourseCompleted(courseId, quizScore = null) {
+      if (state.role !== 'siswa' || !state.user) {
+        showToast('Mode Guru: Pratinjau materi berhasil ditampilkan.', 'info');
+        return;
+      }
+
+      try {
+        const existing = state.data.progres_nilai.find(
+          p => p.siswa_id === state.user.id && p.course_id === courseId
+        );
+        const finalScore = quizScore !== null ? quizScore : (existing?.skor_kuis || 0);
+        const isFirstCompletion = !existing || !existing.status_selesai;
+
+        if (IS_PREVIEW) {
+          if (existing) {
+            existing.status_selesai = true;
+            if (quizScore !== null) existing.skor_kuis = quizScore;
+          } else {
+            PREVIEW_STORE.progres_nilai.push({
+              id: 'p-' + Date.now(),
+              siswa_id: state.user.id,
+              course_id: courseId,
+              status_selesai: true,
+              skor_kuis: finalScore
+            });
+          }
+
+          if (isFirstCompletion) {
+            const sObj = PREVIEW_STORE.siswa.find(s => s.id === state.user.id);
+            if (sObj) sObj.poin = (sObj.poin || 0) + 50;
+            state.user.poin = (state.user.poin || 0) + 50;
+            showToast('Selamat! Materi selesai & Anda mendapatkan +50 EduPoints!');
+          } else {
+            showToast('Progres & nilai kuis berhasil diperbarui!');
+          }
+          await loadAllData();
+        } else {
+          // Upsert ke tabel progres_nilai Supabase
+          if (existing) {
+            const { error } = await supabase
+              .from('progres_nilai')
+              .update({
+                status_selesai: true,
+                skor_kuis: finalScore,
+                updated_at: new Date().toISOString()
+              })
+              .eq('id', existing.id);
+            if (error) throw error;
+          } else {
+            const { error } = await supabase
+              .from('progres_nilai')
+              .insert([{
+                siswa_id: state.user.id,
+                course_id: courseId,
+                status_selesai: true,
+                skor_kuis: finalScore
+              }]);
+            if (error) throw error;
+          }
+
+          if (isFirstCompletion) {
+            const newPoin = (state.user.poin || 0) + 50;
+            await supabase
+              .from('siswa')
+              .update({ poin: newPoin })
+              .eq('id', state.user.id);
+            showToast('Hebat! Materi selesai (+50 EduPoints).');
+          } else {
+            showToast('Nilai kuis tersimpan ke database.');
+          }
+          await loadAllData();
+        }
+      } catch (err) {
+        showToast('Gagal menyimpan progres: ' + err.message, 'error');
+      }
+    }
+
+    async function submitCbtQuiz() {
+      if (!state.activeCourseModal) return;
+      const questions = state.data.kuis_soal.filter(
+        q => q.course_id === state.activeCourseModal.id
+      );
+      if (questions.length === 0) return;
+
+      let correct = 0;
+      questions.forEach(q => {
+        if (state.quizAnswers[q.id] === q.kunci_jawaban) {
+          correct++;
+        }
+      });
+
+      const score = Math.round((correct / questions.length) * 100);
+      state.quizSubmitted = true;
+      state.quizScore = score;
+      renderApp();
+
+      if (state.role === 'siswa') {
+        await markCourseCompleted(state.activeCourseModal.id, score);
+      }
+    }
+
+    async function redeemReward(rewardName, cost) {
+      if (state.role !== 'siswa' || !state.user) {
+        showToast('Fitur penukaran poin khusus untuk akun Siswa.', 'info');
+        return;
+      }
+      const currentPoin = state.user.poin || 0;
+      if (currentPoin < cost) {
+        showToast(`EduPoints belum cukup. Butuh ${cost} poin.`, 'error');
+        return;
+      }
+
+      openConfirmDialog(
+        'Tukar EduPoints?',
+        `Gunakan ${cost} EduPoints untuk mengklaim "${rewardName}"?`,
+        async () => {
+          closeConfirmDialog();
+          const sisa = currentPoin - cost;
+          try {
+            if (IS_PREVIEW) {
+              const sObj = PREVIEW_STORE.siswa.find(s => s.id === state.user.id);
+              if (sObj) sObj.poin = sisa;
+              state.user.poin = sisa;
+              await loadAllData();
+              showToast(`Berhasil menukar "${rewardName}"!`);
+            } else {
+              const { error } = await supabase
+                .from('siswa')
+                .update({ poin: sisa })
+                .eq('id', state.user.id);
+              if (error) throw error;
+              await loadAllData();
+              showToast(`Berhasil mengklaim "${rewardName}"!`);
+            }
+          } catch (err) {
+            showToast('Gagal menukar poin: ' + err.message, 'error');
+          }
+        }
+      );
+    }
+
+    /**
+     * =====================================================================
+     * 9. OPERASI CRUD ADMIN / GURU (100% REAL-TIME SUPABASE & PREVIEW)
+     * =====================================================================
+     */
+    async function handleAdminCreateCourse(e) {
+      e.preventDefault();
+      const f = e.target;
+      const payload = {
+        judul: f.judul.value.trim(),
+        mapel: f.mapel.value.trim(),
+        jenjang: f.jenjang.value,
+        kategori: f.kategori.value,
+        durasi: f.durasi.value.trim() || '15 menit',
+        guru_pengampu: f.guru_pengampu.value.trim() || state.user.nama_lengkap,
+        konten_materi: f.konten_materi.value.trim(),
+        video_url: f.video_url.value.trim()
+      };
+
+      try {
+        if (IS_PREVIEW) {
+          PREVIEW_STORE.courses.unshift({ id: 'c-' + Date.now(), ...payload });
+        } else {
+          const { error } = await supabase.from('courses').insert([payload]);
+          if (error) throw error;
+        }
+        f.reset();
+        await loadAllData();
+        showToast('Materi pembelajaran baru berhasil ditambahkan!');
+      } catch (err) {
+        showToast('Gagal menambah materi: ' + err.message, 'error');
+      }
+    }
+
+    async function handleAdminDeleteRecord(table, id, label) {
+      openConfirmDialog(
+        `Hapus ${label}?`,
+        'Data yang dihapus tidak dapat dikembalikan. Lanjutkan?',
+        async () => {
+          closeConfirmDialog();
+          try {
+            if (IS_PREVIEW) {
+              PREVIEW_STORE[table] = PREVIEW_STORE[table].filter(item => item.id !== id);
+            } else {
+              const { error } = await supabase.from(table).delete().eq('id', id);
+              if (error) throw error;
+            }
+            await loadAllData();
+            showToast(`${label} berhasil dihapus.`);
+          } catch (err) {
+            showToast('Gagal menghapus data: ' + err.message, 'error');
+          }
+        }
+      );
+    }
+
+    async function handleAdminCreateSiswa(e) {
+      e.preventDefault();
+      const f = e.target;
+      const payload = {
+        nisn: f.nisn.value.trim(),
+        nama_lengkap: f.nama_lengkap.value.trim(),
+        kelas: f.kelas.value,
+        password: f.password.value.trim(),
+        poin: 0,
+        status: 'Aktif'
+      };
+
+      try {
+        if (IS_PREVIEW) {
+          PREVIEW_STORE.siswa.unshift({ id: 's-' + Date.now(), ...payload });
+        } else {
+          const { error } = await supabase.from('siswa').insert([payload]);
+          if (error) throw error;
+        }
+        f.reset();
+        await loadAllData();
+        showToast('Akun siswa baru berhasil didaftarkan!');
+      } catch (err) {
+        showToast('Gagal menambah siswa: ' + err.message, 'error');
+      }
+    }
+
+    async function handleAdminCreateSoal(e) {
+      e.preventDefault();
+      const f = e.target;
+      const payload = {
+        course_id: f.course_id.value,
+        pertanyaan: f.pertanyaan.value.trim(),
+        opsi_a: f.opsi_a.value.trim(),
+        opsi_b: f.opsi_b.value.trim(),
+        opsi_c: f.opsi_c.value.trim(),
+        opsi_d: f.opsi_d.value.trim(),
+        kunci_jawaban: f.kunci_jawaban.value,
+        pembahasan: f.pembahasan.value.trim()
+      };
+
+      if (!payload.course_id) {
+        showToast('Pilih mata pelajaran/materi terlebih dahulu.', 'error');
+        return;
+      }
+
+      try {
+        if (IS_PREVIEW) {
+          PREVIEW_STORE.kuis_soal.push({ id: 'q-' + Date.now(), ...payload });
+        } else {
+          const { error } = await supabase.from('kuis_soal').insert([payload]);
+          if (error) throw error;
+        }
+        f.reset();
+        await loadAllData();
+        showToast('Soal kuis CBT berhasil ditambahkan!');
+      } catch (err) {
+        showToast('Gagal menambah soal: ' + err.message, 'error');
+      }
+    }
+
+    async function handleAdminCreatePustaka(e) {
+      e.preventDefault();
+      const f = e.target;
+      const payload = {
+        judul: f.judul.value.trim(),
+        jenis: f.jenis.value,
+        kategori: f.kategori.value.trim(),
+        deskripsi: f.deskripsi.value.trim(),
+        tautan_url: f.tautan_url.value.trim()
+      };
+
+      try {
+        if (IS_PREVIEW) {
+          PREVIEW_STORE.tools_pustaka.unshift({ id: 't-' + Date.now(), ...payload });
+        } else {
+          const { error } = await supabase.from('tools_pustaka').insert([payload]);
+          if (error) throw error;
+        }
+        f.reset();
+        await loadAllData();
+        showToast('Item direktori berhasil disimpan!');
+      } catch (err) {
+        showToast('Gagal menyimpan item: ' + err.message, 'error');
+      }
+    }
+
+    async function handleAdminCreateJadwal(e) {
+      e.preventDefault();
+      const f = e.target;
+      const isHighlight = f.is_highlight.checked;
+      const payload = {
+        judul_sesi: f.judul_sesi.value.trim(),
+        mapel: f.mapel.value.trim(),
+        pengajar: f.pengajar.value.trim(),
+        tanggal: f.tanggal.value,
+        waktu_wib: f.waktu_wib.value.trim(),
+        link_meeting: f.link_meeting.value.trim() || 'https://meet.google.com',
+        is_highlight: isHighlight
+      };
+
+      try {
+        if (IS_PREVIEW) {
+          if (isHighlight) {
+            PREVIEW_STORE.jadwal_live.forEach(j => (j.is_highlight = false));
+          }
+          PREVIEW_STORE.jadwal_live.unshift({ id: 'j-' + Date.now(), ...payload });
+        } else {
+          if (isHighlight) {
+            await supabase.from('jadwal_live').update({ is_highlight: false }).eq('is_highlight', true);
+          }
+          const { error } = await supabase.from('jadwal_live').insert([payload]);
+          if (error) throw error;
+        }
+        f.reset();
+        await loadAllData();
+        showToast('Jadwal kelas live berhasil diterbitkan!');
+      } catch (err) {
+        showToast('Gagal menyimpan jadwal: ' + err.message, 'error');
+      }
+    }
+
+    /**
+     * =====================================================================
+     * 10. HELPER KALENDER BULANAN INTERAKTIF (RIGHT PANEL)
+     * =====================================================================
+     */
+    function changeCalendarMonth(delta) {
+      const d = new Date(state.calendarDate);
+      d.setMonth(d.getMonth() + delta);
+      state.calendarDate = d;
+      renderApp();
+    }
+
+    function renderCalendarWidget() {
+      const year = state.calendarDate.getFullYear();
+      const month = state.calendarDate.getMonth();
+      const monthNames = [
+        'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
+        'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
+      ];
+
+      const firstDay = new Date(year, month, 1).getDay();
+      const daysInMonth = new Date(year, month + 1, 0).getDate();
+      const prevMonthDays = new Date(year, month, 0).getDate();
+
+      // Kumpulkan tanggal yang memiliki jadwal live di bulan ini
+      const eventDays = new Set();
+      state.data.jadwal_live.forEach(j => {
+        if (j.tanggal) {
+          const dt = new Date(j.tanggal);
+          if (dt.getFullYear() === year && dt.getMonth() === month) {
+            eventDays.add(dt.getDate());
+          }
+        }
+      });
+
+      let cellsHtml = '';
+      // Tanggal bulan sebelumnya (redup)
+      for (let i = firstDay - 1; i >= 0; i--) {
+        cellsHtml += `<div class="h-8 flex items-center justify-center text-xs text-slate-300 font-medium">${prevMonthDays - i}</div>`;
+      }
+
+      // Tanggal bulan berjalan
+      for (let day = 1; day <= daysInMonth; day++) {
+        const isSelected = day === state.selectedDay;
+        const hasEvent = eventDays.has(day);
+        if (isSelected) {
+          cellsHtml += `
+            <button onclick="window.lmsActions.selectDay(${day})" class="h-8 w-8 mx-auto rounded-full bg-[#5B45E0] text-white text-xs font-bold flex items-center justify-center shadow-sm transition">
+              ${day}
+            </button>
+          `;
+        } else {
+          cellsHtml += `
+            <button onclick="window.lmsActions.selectDay(${day})" class="relative h-8 w-8 mx-auto rounded-full hover:bg-slate-100 text-slate-700 text-xs font-semibold flex items-center justify-center transition">
+              ${day}
+              ${hasEvent ? '<span class="absolute bottom-1 w-1 h-1 rounded-full bg-[#5B45E0]"></span>' : ''}
+            </button>
+          `;
+        }
+      }
+
+      return `
+        <div class="bg-white rounded-2xl border border-slate-100 p-4 shadow-soft">
+          <div class="flex items-center justify-between mb-3">
+            <div class="flex items-center gap-2 text-sm font-bold text-slate-800">
+              <i data-lucide="calendar" class="w-4 h-4 text-[#5B45E0]"></i>
+              <span>${monthNames[month]} ${year}</span>
+            </div>
+            <div class="flex items-center gap-1">
+              <button onclick="window.lmsActions.changeMonth(-1)" class="p-1 rounded-lg hover:bg-slate-100 text-slate-500" title="Bulan Sebelumnya">
+                <i data-lucide="chevron-up" class="w-4 h-4"></i>
+              </button>
+              <button onclick="window.lmsActions.changeMonth(1)" class="p-1 rounded-lg hover:bg-slate-100 text-slate-500" title="Bulan Berikutnya">
+                <i data-lucide="chevron-down" class="w-4 h-4"></i>
+              </button>
+            </div>
+          </div>
+          <div class="grid grid-cols-7 text-center text-[11px] font-semibold text-slate-400 mb-2">
+            <div>Su</div><div>Mo</div><div>Tu</div><div>We</div><div>Th</div><div>Fr</div><div>Sa</div>
+          </div>
+          <div class="grid grid-cols-7 gap-y-1 text-center">
+            ${cellsHtml}
+          </div>
+        </div>
+      `;
+    }
+
+    /**
+     * =====================================================================
+     * 11. RENDER HALAMAN LOGIN (GLASSMORPHISM CLEAN)
+     * =====================================================================
+     */
+    function renderLoginView() {
+      return `
+        <div class="w-full h-full overflow-y-auto custom-scroll flex flex-col items-center justify-center p-4 bg-[#F7F8FC] relative">
+          <!-- Dekorasi Latar Lembut -->
+          <div class="absolute top-[-10%] left-[-5%] w-80 h-80 rounded-full bg-indigo-200/40 blur-3xl pointer-events-none"></div>
+          <div class="absolute bottom-[-10%] right-[-5%] w-96 h-96 rounded-full bg-purple-200/40 blur-3xl pointer-events-none"></div>
+
+          ${IS_PREVIEW ? `
+            <div class="mb-4 px-4 py-1.5 rounded-full bg-amber-100 border border-amber-300 text-amber-800 text-xs font-bold flex items-center gap-2 shadow-sm z-10">
+              <span class="w-2 h-2 rounded-full bg-amber-500 animate-ping"></span>
+              <span>Mode Preview Aktif — Pengujian UI Lokal</span>
+            </div>
+          ` : ''}
+
+          <div class="w-full max-w-md glass-panel rounded-3xl p-7 sm:p-8 shadow-glass border border-slate-200/80 z-10">
+            <!-- Brand Header -->
+            <div class="flex flex-col items-center text-center mb-6">
+              <div class="w-14 h-14 rounded-2xl bg-[#5B45E0] text-white flex items-center justify-center shadow-lg shadow-indigo-500/30 mb-3">
+                <i data-lucide="graduation-cap" class="w-7 h-7"></i>
+              </div>
+              <h1 class="text-2xl font-extrabold text-slate-900 tracking-tight">SMP Academy</h1>
+              <p class="text-xs sm:text-sm text-slate-500 mt-1">Portal Learning Management System Jenjang SMP</p>
+            </div>
+
+            <!-- Tab Hybrid Login Switcher -->
+            <div class="grid grid-cols-2 gap-1.5 p-1.5 bg-slate-100 rounded-2xl mb-6">
+              <button
+                type="button"
+                onclick="window.lmsActions.switchLoginTab('siswa')"
+                class="py-2.5 text-xs sm:text-sm font-bold rounded-xl transition flex items-center justify-center gap-2 ${state.loginTab === 'siswa' ? 'bg-white text-[#5B45E0] shadow-sm' : 'text-slate-500 hover:text-slate-700'}"
+              >
+                <i data-lucide="user-check" class="w-4 h-4"></i>
+                <span>Masuk Siswa</span>
+              </button>
+              <button
+                type="button"
+                onclick="window.lmsActions.switchLoginTab('admin')"
+                class="py-2.5 text-xs sm:text-sm font-bold rounded-xl transition flex items-center justify-center gap-2 ${state.loginTab === 'admin' ? 'bg-white text-[#5B45E0] shadow-sm' : 'text-slate-500 hover:text-slate-700'}"
+              >
+                <i data-lucide="shield-check" class="w-4 h-4"></i>
+                <span>Guru / Admin</span>
+              </button>
+            </div>
+
+            <!-- Form Login -->
+            <form onsubmit="window.lmsActions.submitLogin(event)" class="space-y-4">
+              ${state.loginTab === 'siswa' ? `
+                <div>
+                  <label class="block text-xs font-bold text-slate-700 mb-1.5">NISN / ID Peserta Didik</label>
+                  <div class="relative">
+                    <i data-lucide="id-card" class="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2"></i>
+                    <input
+                      type="text"
+                      name="nisn"
+                      required
+                      placeholder="Contoh: 0081234567"
+                      class="w-full pl-10 pr-4 py-3 rounded-xl bg-white border border-slate-200 text-sm focus:outline-none focus:border-[#5B45E0] focus:ring-2 focus:ring-indigo-100 transition"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label class="block text-xs font-bold text-slate-700 mb-1.5">Kata Sandi</label>
+                  <div class="relative">
+                    <i data-lucide="lock" class="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2"></i>
+                    <input
+                      type="password"
+                      name="password"
+                      required
+                      placeholder="Masukkan kata sandi"
+                      class="w-full pl-10 pr-4 py-3 rounded-xl bg-white border border-slate-200 text-sm focus:outline-none focus:border-[#5B45E0] focus:ring-2 focus:ring-indigo-100 transition"
+                    />
+                  </div>
+                </div>
+              ` : `
+                <div>
+                  <label class="block text-xs font-bold text-slate-700 mb-1.5">Email Guru / Administrator</label>
+                  <div class="relative">
+                    <i data-lucide="mail" class="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2"></i>
+                    <input
+                      type="email"
+                      name="email"
+                      required
+                      placeholder="guru@sekolah.sch.id"
+                      class="w-full pl-10 pr-4 py-3 rounded-xl bg-white border border-slate-200 text-sm focus:outline-none focus:border-[#5B45E0] focus:ring-2 focus:ring-indigo-100 transition"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label class="block text-xs font-bold text-slate-700 mb-1.5">Password Akun</label>
+                  <div class="relative">
+                    <i data-lucide="key-round" class="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2"></i>
+                    <input
+                      type="password"
+                      name="password"
+                      required
+                      placeholder="••••••••"
+                      class="w-full pl-10 pr-4 py-3 rounded-xl bg-white border border-slate-200 text-sm focus:outline-none focus:border-[#5B45E0] focus:ring-2 focus:ring-indigo-100 transition"
+                    />
+                  </div>
+                </div>
+              `}
+
+              <button
+                type="submit"
+                ${state.loading ? 'disabled' : ''}
+                class="w-full py-3 rounded-xl bg-[#5B45E0] hover:bg-[#4328D9] text-white font-bold text-sm shadow-lg shadow-indigo-500/25 transition flex items-center justify-center gap-2"
+              >
+                ${state.loading ? `
+                  <span class="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+                  <span>Memverifikasi...</span>
+                ` : `
+                  <span>Masuk ke Portal</span>
+                  <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                `}
+              </button>
+            </form>
+
+            ${IS_PREVIEW ? `
+              <!-- Tombol Pintas Quick Login (Hanya Tampil Saat IS_PREVIEW === true) -->
+              <div class="mt-6 pt-5 border-t border-slate-200/80">
+                <p class="text-[11px] font-bold uppercase tracking-wider text-slate-400 text-center mb-3">
+                  Pintasan Uji Coba (Mode Preview)
+                </p>
+                <div class="grid grid-cols-2 gap-2.5">
+                  <button
+                    type="button"
+                    onclick="window.lmsActions.quickLogin('siswa')"
+                    class="py-2.5 px-3 rounded-xl bg-[#EEF0FF] hover:bg-indigo-100 text-[#5B45E0] text-xs font-bold transition flex items-center justify-center gap-1.5"
+                  >
+                    <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
+                    <span>Demo Siswa</span>
+                  </button>
+                  <button
+                    type="button"
+                    onclick="window.lmsActions.quickLogin('admin')"
+                    class="py-2.5 px-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold transition flex items-center justify-center gap-1.5"
+                  >
+                    <i data-lucide="shield" class="w-3.5 h-3.5"></i>
+                    <span>Demo Guru/Admin</span>
+                  </button>
+                </div>
+              </div>
+            ` : ''}
+          </div>
+        </div>
+      `;
+    }
+
+    /**
+     * =====================================================================
+     * 12. RENDER KOMPONEN MENU KONTEN UTAMA (CENTER WORKSPACE)
+     * =====================================================================
+     */
+    function renderStatCards() {
+      const totalMateri = state.data.courses.length;
+      const totalTools = state.data.tools_pustaka.filter(t => t.jenis === 'tool').length;
+      const totalTemplate = state.data.tools_pustaka.filter(t => t.jenis === 'template').length;
+
+      return `
+        <div class="mb-6">
+          <div class="flex items-center justify-between mb-3.5">
+            <h2 class="text-base sm:text-lg font-bold text-slate-900">Ringkasan Statistik</h2>
+            <button onclick="window.lmsActions.setMenu('courses')" class="text-xs sm:text-sm font-bold text-[#5B45E0] hover:underline">
+              Pelajari Modul
+            </button>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <!-- Kartu 1: Lavender Soft -->
+            <div onclick="window.lmsActions.setMenu('courses')" class="cursor-pointer bg-[#F5F3FF] hover:bg-violet-100/70 border border-violet-100 rounded-2xl p-5 transition group">
+              <div class="flex items-center justify-between mb-4">
+                <div class="w-11 h-11 rounded-xl bg-[#6347F9] text-white flex items-center justify-center shadow-sm group-hover:scale-105 transition">
+                  <i data-lucide="book-open" class="w-5 h-5"></i>
+                </div>
+                <span class="px-3 py-1 rounded-full bg-[#E0E7FF] text-[#5B45E0] text-xs font-bold">Aktif</span>
+              </div>
+              <div class="text-3xl font-extrabold text-slate-900 leading-none mb-1.5">${totalMateri}</div>
+              <div class="text-sm font-bold text-slate-800">Jumlah Materi</div>
+              <p class="text-xs text-slate-500 mt-1 truncate">Modul pembelajaran SMP siap dipelajari</p>
+            </div>
+
+            <!-- Kartu 2: Peach Soft -->
+            <div onclick="window.lmsActions.setMenu('tools')" class="cursor-pointer bg-[#FFF7ED] hover:bg-orange-100/70 border border-orange-100 rounded-2xl p-5 transition group">
+              <div class="flex items-center justify-between mb-4">
+                <div class="w-11 h-11 rounded-xl bg-[#F97316] text-white flex items-center justify-center shadow-sm group-hover:scale-105 transition">
+                  <i data-lucide="wrench" class="w-5 h-5"></i>
+                </div>
+                <span class="px-3 py-1 rounded-full bg-[#FFEDD5] text-[#EA580C] text-xs font-bold">Direktori</span>
+              </div>
+              <div class="text-3xl font-extrabold text-slate-900 leading-none mb-1.5">${totalTools}</div>
+              <div class="text-sm font-bold text-slate-800">Jumlah Tools</div>
+              <p class="text-xs text-slate-500 mt-1 truncate">Alat bantu hitung, lab IPA & simulasi</p>
+            </div>
+
+            <!-- Kartu 3: Sky Blue Soft -->
+            <div onclick="window.lmsActions.setMenu('template')" class="cursor-pointer bg-[#F0F9FF] hover:bg-sky-100/70 border border-sky-100 rounded-2xl p-5 transition group">
+              <div class="flex items-center justify-between mb-4">
+                <div class="w-11 h-11 rounded-xl bg-[#2563EB] text-white flex items-center justify-center shadow-sm group-hover:scale-105 transition">
+                  <i data-lucide="archive" class="w-5 h-5"></i>
+                </div>
+                <span class="px-3 py-1 rounded-full bg-[#DBEAFE] text-[#1D4ED8] text-xs font-bold">Pustaka</span>
+              </div>
+              <div class="text-3xl font-extrabold text-slate-900 leading-none mb-1.5">${totalTemplate}</div>
+              <div class="text-sm font-bold text-slate-800">Jumlah Template</div>
+              <p class="text-xs text-slate-500 mt-1 truncate">LKPD, rangkuman rumus & aset unduhan</p>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderCourseRow(course) {
+      const isCompleted = state.role === 'siswa' && state.data.progres_nilai.some(
+        p => p.siswa_id === state.user?.id && p.course_id === course.id && p.status_selesai
+      );
+      const quizCount = state.data.kuis_soal.filter(q => q.course_id === course.id).length;
+
+      return `
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-slate-50/90 hover:bg-slate-100/80 border border-slate-100 rounded-2xl p-3.5 transition">
+          <div class="flex items-center gap-3.5 min-w-0">
+            <div class="w-11 h-11 rounded-xl bg-[#EEF0FF] text-[#5B45E0] flex items-center justify-center shrink-0">
+              <i data-lucide="code-2" class="w-5 h-5"></i>
+            </div>
+            <div class="min-w-0">
+              <div class="flex items-center gap-2 flex-wrap">
+                <h4 class="text-sm font-bold text-slate-800 truncate">${escapeHtml(course.judul)}</h4>
+                ${isCompleted ? `
+                  <span class="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700 text-[10px] font-bold">Selesai</span>
+                ` : ''}
+              </div>
+              <p class="text-xs text-slate-400 font-medium mt-0.5">
+                ${escapeHtml(course.mapel)} (${escapeHtml(course.jenjang)}) • ${escapeHtml(course.kategori)} • ${escapeHtml(course.durasi)} • ${quizCount} Soal Kuis
+              </p>
+            </div>
+          </div>
+
+          <button
+            onclick="window.lmsActions.openCourse('${course.id}')"
+            class="shrink-0 inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-white hover:bg-[#5B45E0] text-slate-700 hover:text-white border border-slate-200 hover:border-[#5B45E0] text-xs font-bold shadow-2xs transition"
+          >
+            <i data-lucide="play" class="w-3.5 h-3.5 fill-current"></i>
+            <span>Buka Materi</span>
+          </button>
+        </div>
+      `;
+    }
+
+    function renderDashboardPage() {
+      const q = state.searchQuery.toLowerCase();
+      const filteredCourses = state.data.courses.filter(c =>
+        c.judul.toLowerCase().includes(q) ||
+        c.mapel.toLowerCase().includes(q) ||
+        c.jenjang.toLowerCase().includes(q)
+      );
+
+      return `
+        ${renderStatCards()}
+
+        <!-- My Courses Section -->
+        <div>
+          <div class="flex items-center justify-between mb-3.5">
+            <h2 class="text-base sm:text-lg font-bold text-slate-900">My Courses</h2>
+            <button onclick="window.lmsActions.setMenu('courses')" class="text-xs sm:text-sm font-bold text-[#5B45E0] hover:underline">
+              View All
+            </button>
+          </div>
+
+          <div class="bg-white rounded-3xl border border-slate-100 p-4 sm:p-5 shadow-soft space-y-3">
+            ${filteredCourses.length === 0 ? `
+              <div class="text-center py-10">
+                <div class="w-12 h-12 rounded-2xl bg-slate-100 text-slate-400 flex items-center justify-center mx-auto mb-3">
+                  <i data-lucide="book-x" class="w-6 h-6"></i>
+                </div>
+                <p class="text-sm font-bold text-slate-700">Belum ada data materi</p>
+                <p class="text-xs text-slate-400 mt-1">Materi pembelajaran yang ditambahkan guru akan muncul di sini.</p>
+              </div>
+            ` : filteredCourses.slice(0, 5).map(renderCourseRow).join('')}
+          </div>
+        </div>
+      `;
+    }
+
+    function renderCoursesPage() {
+      const q = state.searchQuery.toLowerCase();
+      const jenjangList = ['Semua', 'Kelas 7', 'Kelas 8', 'Kelas 9'];
+      const filtered = state.data.courses.filter(c => {
+        const matchJenjang = state.filterJenjang === 'Semua' || c.jenjang === state.filterJenjang;
+        const matchQuery = c.judul.toLowerCase().includes(q) || c.mapel.toLowerCase().includes(q);
+        return matchJenjang && matchQuery;
+      });
+
+      return `
+        <div class="space-y-5">
+          <!-- Filter Jenjang SMP -->
+          <div class="flex flex-wrap items-center justify-between gap-3">
+            <div class="flex items-center gap-2 flex-wrap">
+              ${jenjangList.map(j => `
+                <button
+                  onclick="window.lmsActions.setFilterJenjang('${j}')"
+                  class="px-4 py-2 rounded-full text-xs font-bold transition ${state.filterJenjang === j ? 'bg-[#5B45E0] text-white shadow-sm' : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50'}"
+                >
+                  ${j}
+                </button>
+              `).join('')}
+            </div>
+            <div class="text-xs font-semibold text-slate-500">
+              Menampilkan <span class="text-slate-900 font-bold">${filtered.length}</span> modul pembelajaran
+            </div>
+          </div>
+
+          <div class="bg-white rounded-3xl border border-slate-100 p-4 sm:p-5 shadow-soft space-y-3">
+            ${filtered.length === 0 ? `
+              <div class="text-center py-12">
+                <p class="text-sm font-bold text-slate-700">Belum ada materi pada filter ini</p>
+                <p class="text-xs text-slate-400 mt-1">Coba pilih jenjang kelas lain atau ubah kata kunci pencarian.</p>
+              </div>
+            ` : filtered.map(renderCourseRow).join('')}
+          </div>
+        </div>
+      `;
+    }
+
+    function renderToolsPage() {
+      const tools = state.data.tools_pustaka.filter(t => t.jenis === 'tool');
+      const c = parseFloat(state.tempCelsius) || 0;
+      const reamur = (c * 0.8).toFixed(1);
+      const fahrenheit = (c * 1.8 + 32).toFixed(1);
+      const kelvin = (c + 273.15).toFixed(2);
+
+      return `
+        <div class="space-y-6">
+          <!-- Interactive Mini Lab & Kalkulator SMP -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <!-- Tool 1: Kalkulator Cepat Matematika -->
+            <div class="bg-white rounded-3xl border border-slate-100 p-5 shadow-soft">
+              <div class="flex items-center gap-2.5 mb-3">
+                <div class="w-9 h-9 rounded-xl bg-orange-100 text-orange-600 flex items-center justify-center">
+                  <i data-lucide="calculator" class="w-5 h-5"></i>
+                </div>
+                <div>
+                  <h3 class="text-sm font-bold text-slate-900">Kalkulator Hitung Cepat</h3>
+                  <p class="text-[11px] text-slate-400">Bantu hitung aljabar & aritmatika</p>
+                </div>
+              </div>
+              <div class="bg-slate-900 text-white rounded-2xl p-3.5 text-right mb-3">
+                <div class="text-xs text-slate-400 h-4 truncate">${escapeHtml(state.calcInput || '0')}</div>
+                <div class="text-2xl font-extrabold tracking-tight mt-0.5">${escapeHtml(state.calcResult)}</div>
+              </div>
+              <div class="grid grid-cols-4 gap-2 text-xs font-bold">
+                ${['7','8','9','/','4','5','6','*','1','2','3','-','C','0','=','+'].map(btn => `
+                  <button
+                    onclick="window.lmsActions.pressCalc('${btn}')"
+                    class="py-2.5 rounded-xl transition ${btn === '=' ? 'bg-[#5B45E0] text-white' : btn === 'C' ? 'bg-rose-50 text-rose-600' : 'bg-slate-100 hover:bg-slate-200 text-slate-800'}"
+                  >
+                    ${btn}
+                  </button>
+                `).join('')}
+              </div>
+            </div>
+
+            <!-- Tool 2: Lab Virtual Konversi Suhu IPA -->
+            <div class="bg-white rounded-3xl border border-slate-100 p-5 shadow-soft flex flex-col justify-between">
+              <div>
+                <div class="flex items-center gap-2.5 mb-3">
+                  <div class="w-9 h-9 rounded-xl bg-indigo-100 text-[#5B45E0] flex items-center justify-center">
+                    <i data-lucide="thermometer" class="w-5 h-5"></i>
+                  </div>
+                  <div>
+                    <h3 class="text-sm font-bold text-slate-900">Lab IPA: Termometer Digital</h3>
+                    <p class="text-[11px] text-slate-400">Simulasi konversi skala suhu Kelas 7</p>
+                  </div>
+                </div>
+                <label class="block text-xs font-bold text-slate-600 mb-1.5">Suhu Celcius (°C):</label>
+                <input
+                  type="number"
+                  value="${state.tempCelsius}"
+                  oninput="window.lmsActions.updateTemp(this.value)"
+                  class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm font-bold focus:outline-none focus:border-[#5B45E0]"
+                />
+              </div>
+              <div class="grid grid-cols-3 gap-2 mt-4">
+                <div class="p-3 rounded-2xl bg-[#F5F3FF] text-center">
+                  <div class="text-[11px] font-semibold text-slate-500">Reamur</div>
+                  <div class="text-base font-extrabold text-[#5B45E0] mt-0.5">${reamur} °R</div>
+                </div>
+                <div class="p-3 rounded-2xl bg-[#FFF7ED] text-center">
+                  <div class="text-[11px] font-semibold text-slate-500">Fahrenheit</div>
+                  <div class="text-base font-extrabold text-orange-600 mt-0.5">${fahrenheit} °F</div>
+                </div>
+                <div class="p-3 rounded-2xl bg-[#F0F9FF] text-center">
+                  <div class="text-[11px] font-semibold text-slate-500">Kelvin</div>
+                  <div class="text-base font-extrabold text-blue-600 mt-0.5">${kelvin} K</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Direktori Tools Eksternal dari Database -->
+          <div class="bg-white rounded-3xl border border-slate-100 p-5 shadow-soft">
+            <h3 class="text-base font-bold text-slate-900 mb-3">Direktori Tools & Lab Virtual</h3>
+            ${tools.length === 0 ? `
+              <p class="text-xs text-slate-400 py-6 text-center">Belum ada direktori tools eksternal yang ditambahkan.</p>
+            ` : `
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                ${tools.map(t => `
+                  <div class="p-4 rounded-2xl bg-slate-50 border border-slate-100 flex flex-col justify-between gap-3">
+                    <div>
+                      <span class="px-2.5 py-0.5 rounded-full bg-orange-100 text-orange-700 text-[10px] font-bold">${escapeHtml(t.kategori)}</span>
+                      <h4 class="text-sm font-bold text-slate-800 mt-2">${escapeHtml(t.judul)}</h4>
+                      <p class="text-xs text-slate-500 mt-1">${escapeHtml(t.deskripsi)}</p>
+                    </div>
+                    <a href="${escapeHtml(t.tautan_url)}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl bg-white border border-slate-200 hover:border-[#5B45E0] text-xs font-bold text-[#5B45E0] transition">
+                      <span>Buka Aplikasi</span>
+                      <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+                    </a>
+                  </div>
+                `).join('')}
+              </div>
+            `}
+          </div>
+        </div>
+      `;
+    }
+
+    function renderTemplatePage() {
+      const templates = state.data.tools_pustaka.filter(t => t.jenis === 'template');
+      return `
+        <div class="bg-white rounded-3xl border border-slate-100 p-5 shadow-soft">
+          <div class="flex items-center justify-between mb-4">
+            <div>
+              <h3 class="text-base font-bold text-slate-900">Pustaka LKPD & Modul Siap Unduh</h3>
+              <p class="text-xs text-slate-400">Lembar Kerja Peserta Didik, rangkuman materi, dan panduan praktikum</p>
+            </div>
+          </div>
+
+          ${templates.length === 0 ? `
+            <div class="text-center py-12">
+              <p class="text-sm font-bold text-slate-700">Belum ada file template / LKPD</p>
+              <p class="text-xs text-slate-400 mt-1">Guru dapat mengunggah tautan LKPD melalui panel administrator.</p>
+            </div>
+          ` : `
+            <div class="space-y-3">
+              ${templates.map(item => `
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 rounded-2xl bg-slate-50 border border-slate-100">
+                  <div class="flex items-start gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center shrink-0">
+                      <i data-lucide="file-text" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                      <div class="flex items-center gap-2">
+                        <h4 class="text-sm font-bold text-slate-800">${escapeHtml(item.judul)}</h4>
+                        <span class="px-2 py-0.5 rounded-full bg-blue-100 text-blue-700 text-[10px] font-bold">${escapeHtml(item.kategori)}</span>
+                      </div>
+                      <p class="text-xs text-slate-500 mt-1">${escapeHtml(item.deskripsi)}</p>
+                    </div>
+                  </div>
+                  <a href="${escapeHtml(item.tautan_url)}" target="_blank" rel="noopener noreferrer" class="shrink-0 inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-xl bg-[#5B45E0] hover:bg-[#4328D9] text-white text-xs font-bold transition">
+                    <i data-lucide="download" class="w-3.5 h-3.5"></i>
+                    <span>Unduh LKPD</span>
+                  </a>
+                </div>
+              `).join('')}
+            </div>
+          `}
+        </div>
+      `;
+    }
+
+    function renderMarketPage() {
+      const poin = state.role === 'siswa' ? (state.user?.poin || 0) : 999;
+      const rewards = [
+        { title: 'Lencana Bintang Pelajar', desc: 'Badge prestisius pada profil siswa selama 1 semester.', cost: 100, icon: 'award', color: 'bg-violet-100 text-[#5B45E0]' },
+        { title: 'Kupon Tambahan Waktu Kuis', desc: 'Tukar poin dengan hak istimewa waktu latihan ekstra.', cost: 150, icon: 'clock', color: 'bg-orange-100 text-orange-600' },
+        { title: 'Sertifikat Apresiasi Digital', desc: 'Sertifikat keaktifan belajar mandiri SMP Academy.', cost: 250, icon: 'medal', color: 'bg-sky-100 text-blue-600' }
+      ];
+
+      return `
+        <div class="space-y-5">
+          <!-- Saldo EduPoints Banner -->
+          <div class="live-card-gradient rounded-3xl p-6 text-white flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-soft">
+            <div>
+              <span class="px-3 py-1 rounded-full bg-white/20 text-xs font-bold">Gamifikasi Belajar SMP</span>
+              <h3 class="text-2xl font-extrabold mt-2">Saldo EduPoints: ${poin} Poin</h3>
+              <p class="text-xs text-indigo-100 mt-1">Selesaikan modul materi dan kuis CBT untuk mengumpulkan lebih banyak poin!</p>
+            </div>
+            <button onclick="window.lmsActions.setMenu('courses')" class="px-5 py-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold shrink-0 transition">
+              Kumpulkan Poin Sekarang
+            </button>
+          </div>
+
+          <!-- Katalog Penukaran -->
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            ${rewards.map(r => `
+              <div class="bg-white rounded-3xl border border-slate-100 p-5 shadow-soft flex flex-col justify-between gap-4">
+                <div>
+                  <div class="w-12 h-12 rounded-2xl ${r.color} flex items-center justify-center mb-3">
+                    <i data-lucide="${r.icon}" class="w-6 h-6"></i>
+                  </div>
+                  <h4 class="text-sm font-bold text-slate-900">${r.title}</h4>
+                  <p class="text-xs text-slate-500 mt-1">${r.desc}</p>
+                </div>
+                <button
+                  onclick="window.lmsActions.redeem('${r.title}', ${r.cost})"
+                  class="w-full py-2.5 rounded-xl bg-[#EEF0FF] hover:bg-[#5B45E0] text-[#5B45E0] hover:text-white text-xs font-bold transition"
+                >
+                  Tukar ${r.cost} Poin
+                </button>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `;
+    }
+
+    function renderSchedulePage() {
+      const list = state.data.jadwal_live;
+      return `
+        <div class="bg-white rounded-3xl border border-slate-100 p-5 shadow-soft">
+          <h3 class="text-base font-bold text-slate-900 mb-4">Jadwal Sesi Live Mentoring & Kelas Daring</h3>
+          ${list.length === 0 ? `
+            <p class="text-xs text-slate-400 py-8 text-center">Belum ada jadwal kelas live yang diterbitkan.</p>
+          ` : `
+            <div class="space-y-3">
+              ${list.map(j => `
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 rounded-2xl ${j.is_highlight ? 'bg-[#F5F3FF] border border-indigo-200' : 'bg-slate-50 border border-slate-100'}">
+                  <div class="flex items-start gap-3.5">
+                    <div class="w-11 h-11 rounded-xl bg-[#5B45E0] text-white flex items-center justify-center shrink-0">
+                      <i data-lucide="video" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                      <div class="flex items-center gap-2 flex-wrap">
+                        <h4 class="text-sm font-bold text-slate-900">${escapeHtml(j.judul_sesi)}</h4>
+                        ${j.is_highlight ? '<span class="px-2 py-0.5 rounded-full bg-[#5B45E0] text-white text-[10px] font-bold">Sesi Utama</span>' : ''}
+                      </div>
+                      <p class="text-xs text-slate-500 mt-0.5">
+                        ${escapeHtml(j.mapel)} • Pengajar: ${escapeHtml(j.pengajar)} • ${escapeHtml(j.waktu_wib)} (${escapeHtml(j.tanggal)})
+                      </p>
+                    </div>
+                  </div>
+                  <a href="${escapeHtml(j.link_meeting)}" target="_blank" rel="noopener noreferrer" class="shrink-0 inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl bg-slate-900 hover:bg-[#5B45E0] text-white text-xs font-bold transition">
+                    <span>Gabung Ruang</span>
+                    <i data-lucide="arrow-up-right" class="w-3.5 h-3.5"></i>
+                  </a>
+                </div>
+              `).join('')}
+            </div>
+          `}
+        </div>
+      `;
+    }
+
+    function renderHelpPage() {
+      const faqs = [
+        { q: 'Bagaimana cara mengerjakan materi dan kuis CBT?', a: 'Buka menu Courses atau klik tombol "Buka Materi" pada salah satu mata pelajaran. Setelah membaca modul, klik tab "Latihan Kuis CBT" untuk menjawab soal pilihan ganda dan melihat nilai otomatis.' },
+        { q: 'Bagaimana cara mendapatkan EduPoints?', a: 'Setiap modul pembelajaran yang Anda selesaikan untuk pertama kali akan memberikan +50 EduPoints otomatis ke akun siswa Anda.' },
+        { q: 'Bagaimana jika siswa lupa password login?', a: 'Silakan hubungi Wali Kelas atau Guru Pengampu agar password akun siswa dapat dilihat atau diperbarui melalui Panel Manajemen Guru.' }
+      ];
+
+      return `
+        <div class="bg-white rounded-3xl border border-slate-100 p-5 shadow-soft space-y-4">
+          <h3 class="text-base font-bold text-slate-900">Pusat Bantuan & Panduan Pengguna (FAQ)</h3>
+          <div class="space-y-3">
+            ${faqs.map(item => `
+              <div class="p-4 rounded-2xl bg-slate-50 border border-slate-100">
+                <h4 class="text-sm font-bold text-slate-800 flex items-center gap-2">
+                  <i data-lucide="help-circle" class="w-4 h-4 text-[#5B45E0]"></i>
+                  <span>${item.q}</span>
+                </h4>
+                <p class="text-xs text-slate-600 mt-1.5 leading-relaxed">${item.a}</p>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `;
+    }
+
+    /**
+     * =====================================================================
+     * 13. PANEL MANAJEMEN GURU / ADMIN (CRUD LENGKAP SEMUA TABEL)
+     * =====================================================================
+     */
+    function renderAdminPanelPage() {
+      if (state.role !== 'admin') {
+        return `<div class="p-6 bg-white rounded-3xl text-center text-sm font-bold text-rose-600">Akses khusus Guru / Administrator.</div>`;
+      }
+
+      const tabs = [
+        { id: 'courses', label: 'Materi & Mapel' },
+        { id: 'siswa', label: 'Data Siswa' },
+        { id: 'kuis', label: 'Bank Soal CBT' },
+        { id: 'pustaka', label: 'Tools & LKPD' },
+        { id: 'jadwal', label: 'Jadwal Live' },
+        { id: 'rekap', label: 'Rekap Nilai' }
+      ];
+
+      let contentHtml = '';
+
+      if (state.adminSubTab === 'courses') {
+        contentHtml = `
+          <form onsubmit="window.lmsActions.adminCreateCourse(event)" class="grid grid-cols-1 sm:grid-cols-2 gap-3 p-4 rounded-2xl bg-slate-50 border border-slate-200/70 mb-5">
+            <input name="judul" required placeholder="Judul Bab / Materi" class="px-3.5 py-2.5 rounded-xl bg-white border border-slate-200 text-xs font-medium" />
+            <input name="mapel" required placeholder="Mata Pelajaran (Misal: Matematika)" class="px-3.5 py-2.5 rounded-xl bg-white border border-slate-200 text-xs font-medium" />
+            <select name="jenjang" class="px-3.5 py-2.5 rounded-xl bg-white border border-slate-200 text-xs font-medium">
+              <option value="Kelas 7">Kelas 7</option>
+              <option value="Kelas 8">Kelas 8</option>
+              <option value="Kelas 9">Kelas 9</option>
+            </select>
+            <select name="kategori" class="px-3.5 py-2.5 rounded-xl bg-white border border-slate-200 text-xs font-medium">
+              <option value="Dasar">Dasar</option>
+              <option value="Praktik">Praktik</option>
+              <option value="Pendalaman">Pendalaman</option>
+            </select>
+            <input name="durasi" placeholder="Durasi (Misal: 15 menit)" class="px-3.5 py-2.5 rounded-xl bg-white border border-slate-200 text-xs font-medium" />
+            <input name="guru_pengampu" placeholder="Nama Guru Pengampu" class="px-3.5 py-2.5 rounded-xl bg-white border border-slate-200 text-xs font-medium" />
+            <input name="video_url" placeholder="Link Video YouTube Embed (Opsional)" class="sm:col-span-2 px-3.5 py-2.5 rounded-xl bg-white border border-slate-200 text-xs font-medium" />
+            <textarea name="konten_materi" required rows="3" placeholder="Isi ringkasan materi pembelajaran..." class="sm:col-span-2 px-3.5 py-2.5 rounded-xl bg-white border border-slate-200 text-xs font-medium"></textarea>
+            <button type="submit" class="sm:col-span-2 py-2.5 rounded-xl bg-[#5B45E0] hover:bg-[#4328D9] text-white text-xs font-bold transition">
+              + Simpan Materi Baru
+            </button>
+          </form>
+
+          <div class="space-y-2">
+            ${state.data.courses.map(c => `
+              <div class="flex items-center justify-between p-3 rounded-xl bg-slate-50 border border-slate-100 text-xs">
+                <div>
+                  <span class="font-bold text-slate-900">${escapeHtml(c.judul)}</span>
+                  <span class="text-slate-400 ml-2">${escapeHtml(c.mapel)} • ${escapeHtml(c.jenjang)}</span>
+                </div>
+                <button onclick="window.lmsActions.adminDelete('courses', '${c.id}', 'Materi')" class="px-2.5 py-1.5 rounded-lg bg-rose-50 text-rose-600 font-bold hover:bg-rose-100">Hapus</button>
+              </div>
+            `).join('')}
+          </div>
+        `;
+      } else if (state.adminSubTab === 'siswa') {
+        contentHtml = `
+          <form onsubmit="window.lmsActions.adminCreateSiswa(event)" class="grid grid-cols-1 sm:grid-cols-4 gap-3 p-4 rounded-2xl bg-slate-50 border border-slate-200/70 mb-5">
+            <input name="nisn" required placeholder="NISN / ID Login" class="px-3.5 py-2.5 rounded-xl bg-white border border-slate-200 text-xs" />
+            <input name="nama_lengkap" required placeholder="Nama Lengkap Siswa" class="px-3.5 py-2.5 rounded-xl bg-white border border-slate-200 text-xs" />
+            <select name="kelas" class="px-3.5 py-2.5 rounded-xl bg-white border border-slate-200 text-xs">
+              <option value="Kelas 7A">Kelas 7A</option>
+              <option value="Kelas 7B">Kelas 7B</option>
+              <option value="Kelas 8A">Kelas 8A</option>
+              <option value="Kelas 8B">Kelas 8B</option>
+              <option value="Kelas 9A">Kelas 9A</option>
+              <option value="Kelas 9B">Kelas 9B</option>
+            </select>
+            <input name="password" required placeholder="Password Login" class="px-3.5 py-2.5 rounded-xl bg-white border border-slate-200 text-xs" />
+            <button type="submit" class="sm:col-span-4 py-2.5 rounded-xl bg-[#5B45E0] text-white text-xs font-bold">+ Daftarkan Siswa</button>
+          </form>
+
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs">
+              <thead>
+                <tr class="border-b border-slate-200 text-slate-400">
+                  <th class="py-2">NISN</th>
+                  <th class="py-2">Nama Siswa</th>
+                  <th class="py-2">Kelas</th>
+                  <th class="py-2">Password</th>
+                  <th class="py-2">Poin</th>
+                  <th class="py-2 text-right">Aksi</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100">
+                ${state.data.siswa.map(s => `
+                  <tr>
+                    <td class="py-2.5 font-mono font-bold text-slate-700">${escapeHtml(s.nisn)}</td>
+                    <td class="py-2.5 font-bold text-slate-900">${escapeHtml(s.nama_lengkap)}</td>
+                    <td class="py-2.5 text-slate-600">${escapeHtml(s.kelas)}</td>
+                    <td class="py-2.5 font-mono text-slate-500">${escapeHtml(s.password)}</td>
+                    <td class="py-2.5 font-bold text-[#5B45E0]">${s.poin || 0}</td>
+                    <td class="py-2.5 text-right">
+                      <button onclick="window.lmsActions.adminDelete('siswa', '${s.id}', 'Akun Siswa')" class="px-2.5 py-1 rounded-lg bg-rose-50 text-rose-600 font-bold">Hapus</button>
+                    </td>
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
+          </div>
+        `;
+      } else if (state.adminSubTab === 'kuis') {
+        contentHtml = `
+          <form onsubmit="window.lmsActions.adminCreateSoal(event)" class="grid grid-cols-1 sm:grid-cols-2 gap-3 p-4 rounded-2xl bg-slate-50 border border-slate-200/70 mb-5">
+            <select name="course_id" required class="sm:col-span-2 px-3.5 py-2.5 rounded-xl bg-white border border-slate-200 text-xs font-bold">
+              <option value="">-- Pilih Materi Tujuan Soal --</option>
+              ${state.data.courses.map(c => `<option value="${c.id}">${escapeHtml(c.judul)} (${escapeHtml(c.jenjang)})</option>`).join('')}
+            </select>
+            <textarea name="pertanyaan" required rows="2" placeholder="Tulis pertanyaan pilihan ganda..." class="sm:col-span-2 px-3.5 py-2.5 rounded-xl bg-white border border-slate-200 text-xs"></textarea>
+            <input name="opsi_a" required placeholder="Opsi A" class="px-3.5 py-2 rounded-xl bg-white border border-slate-200 text-xs" />
+            <input name="opsi_b" required placeholder="Opsi B" class="px-3.5 py-2 rounded-xl bg-white border border-slate-200 text-xs" />
+            <input name="opsi_c" required placeholder="Opsi C" class="px-3.5 py-2 rounded-xl bg-white border border-slate-200 text-xs" />
+            <input name="opsi_d" required placeholder="Opsi D" class="px-3.5 py-2 rounded-xl bg-white border border-slate-200 text-xs" />
+            <select name="kunci_jawaban" class="px-3.5 py-2 rounded-xl bg-white border border-slate-200 text-xs font-bold">
+              <option value="A">Kunci: A</option>
+              <option value="B">Kunci: B</option>
+              <option value="C">Kunci: C</option>
+              <option value="D">Kunci: D</option>
+            </select>
+            <input name="pembahasan" placeholder="Pembahasan singkat jawaban" class="px-3.5 py-2 rounded-xl bg-white border border-slate-200 text-xs" />
+            <button type="submit" class="sm:col-span-2 py-2.5 rounded-xl bg-[#5B45E0] text-white text-xs font-bold">+ Tambah Soal CBT</button>
+          </form>
+
+          <div class="space-y-2">
+            ${state.data.kuis_soal.map(q => `
+              <div class="flex items-start justify-between gap-3 p-3 rounded-xl bg-slate-50 border border-slate-100 text-xs">
+                <div>
+                  <p class="font-bold text-slate-800">${escapeHtml(q.pertanyaan)}</p>
+                  <p class="text-slate-500 mt-0.5">Kunci: <strong class="text-emerald-600">${q.kunci_jawaban}</strong> • ${escapeHtml(q.pembahasan)}</p>
+                </div>
+                <button onclick="window.lmsActions.adminDelete('kuis_soal', '${q.id}', 'Soal Kuis')" class="shrink-0 px-2.5 py-1 rounded-lg bg-rose-50 text-rose-600 font-bold">Hapus</button>
+              </div>
+            `).join('')}
+          </div>
+        `;
+      } else if (state.adminSubTab === 'pustaka') {
+        contentHtml = `
+          <form onsubmit="window.lmsActions.adminCreatePustaka(event)" class="grid grid-cols-1 sm:grid-cols-2 gap-3 p-4 rounded-2xl bg-slate-50 border border-slate-200/70 mb-5">
+            <input name="judul" required placeholder="Judul Tool atau LKPD/Template" class="px-3.5 py-2.5 rounded-xl bg-white border border-slate-200 text-xs" />
+            <select name="jenis" class="px-3.5 py-2.5 rounded-xl bg-white border border-slate-200 text-xs font-bold">
+              <option value="tool">Jenis: Tools / Lab Virtual</option>
+              <option value="template">Jenis: Template / LKPD</option>
+            </select>
+            <input name="kategori" required placeholder="Kategori (Misal: Lab IPA / LKPD Kelas 8)" class="px-3.5 py-2.5 rounded-xl bg-white border border-slate-200 text-xs" />
+            <input name="tautan_url" required placeholder="Tautan URL (https://...)" class="px-3.5 py-2.5 rounded-xl bg-white border border-slate-200 text-xs" />
+            <input name="deskripsi" required placeholder="Deskripsi singkat manfaat" class="sm:col-span-2 px-3.5 py-2.5 rounded-xl bg-white border border-slate-200 text-xs" />
+            <button type="submit" class="sm:col-span-2 py-2.5 rounded-xl bg-[#5B45E0] text-white text-xs font-bold">+ Tambah ke Direktori</button>
+          </form>
+
+          <div class="space-y-2">
+            ${state.data.tools_pustaka.map(t => `
+              <div class="flex items-center justify-between p-3 rounded-xl bg-slate-50 border border-slate-100 text-xs">
+                <div>
+                  <span class="px-2 py-0.5 rounded bg-indigo-100 text-[#5B45E0] font-bold uppercase text-[10px] mr-2">${escapeHtml(t.jenis)}</span>
+                  <span class="font-bold text-slate-900">${escapeHtml(t.judul)}</span>
+                </div>
+                <button onclick="window.lmsActions.adminDelete('tools_pustaka', '${t.id}', 'Item Pustaka')" class="px-2.5 py-1 rounded-lg bg-rose-50 text-rose-600 font-bold">Hapus</button>
+              </div>
+            `).join('')}
+          </div>
+        `;
+      } else if (state.adminSubTab === 'jadwal') {
+        contentHtml = `
+          <form onsubmit="window.lmsActions.adminCreateJadwal(event)" class="grid grid-cols-1 sm:grid-cols-2 gap-3 p-4 rounded-2xl bg-slate-50 border border-slate-200/70 mb-5">
+            <input name="judul_sesi" required placeholder="Judul Sesi Live Mentoring" class="px-3.5 py-2.5 rounded-xl bg-white border border-slate-200 text-xs" />
+            <input name="mapel" required placeholder="Mata Pelajaran" class="px-3.5 py-2.5 rounded-xl bg-white border border-slate-200 text-xs" />
+            <input name="pengajar" required placeholder="Nama Guru Pengajar" class="px-3.5 py-2.5 rounded-xl bg-white border border-slate-200 text-xs" />
+            <input type="date" name="tanggal" required class="px-3.5 py-2.5 rounded-xl bg-white border border-slate-200 text-xs" />
+            <input name="waktu_wib" required placeholder="Waktu (Misal: Kamis, 19.30 WIB)" class="px-3.5 py-2.5 rounded-xl bg-white border border-slate-200 text-xs" />
+            <input name="link_meeting" placeholder="Link Google Meet / Zoom" class="px-3.5 py-2.5 rounded-xl bg-white border border-slate-200 text-xs" />
+            <label class="sm:col-span-2 flex items-center gap-2 text-xs font-bold text-slate-700">
+              <input type="checkbox" name="is_highlight" class="rounded text-[#5B45E0]" />
+              <span>Jadikan Banner Utama di Panel Kanan Dashboard</span>
+            </label>
+            <button type="submit" class="sm:col-span-2 py-2.5 rounded-xl bg-[#5B45E0] text-white text-xs font-bold">+ Terbitkan Jadwal Live</button>
+          </form>
+
+          <div class="space-y-2">
+            ${state.data.jadwal_live.map(j => `
+              <div class="flex items-center justify-between p-3 rounded-xl bg-slate-50 border border-slate-100 text-xs">
+                <div>
+                  <span class="font-bold text-slate-900">${escapeHtml(j.judul_sesi)}</span>
+                  <span class="text-slate-400 ml-2">${escapeHtml(j.tanggal)} • ${escapeHtml(j.waktu_wib)}</span>
+                </div>
+                <button onclick="window.lmsActions.adminDelete('jadwal_live', '${j.id}', 'Jadwal')" class="px-2.5 py-1 rounded-lg bg-rose-50 text-rose-600 font-bold">Hapus</button>
+              </div>
+            `).join('')}
+          </div>
+        `;
+      } else if (state.adminSubTab === 'rekap') {
+        contentHtml = `
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs">
+              <thead>
+                <tr class="border-b border-slate-200 text-slate-400">
+                  <th class="py-2">Nama Siswa</th>
+                  <th class="py-2">Kelas</th>
+                  <th class="py-2">Materi</th>
+                  <th class="py-2">Status</th>
+                  <th class="py-2">Skor Kuis</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100">
+                ${state.data.progres_nilai.length === 0 ? `
+                  <tr><td colspan="5" class="py-6 text-center text-slate-400">Belum ada riwayat nilai siswa.</td></tr>
+                ` : state.data.progres_nilai.map(p => {
+                  const s = state.data.siswa.find(x => x.id === p.siswa_id);
+                  const c = state.data.courses.find(x => x.id === p.course_id);
+                  return `
+                    <tr>
+                      <td class="py-2.5 font-bold text-slate-900">${escapeHtml(s?.nama_lengkap || 'Siswa')}</td>
+                      <td class="py-2.5 text-slate-600">${escapeHtml(s?.kelas || '-')}</td>
+                      <td class="py-2.5 text-slate-800">${escapeHtml(c?.judul || 'Materi')}</td>
+                      <td class="py-2.5"><span class="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700 font-bold">Selesai</span></td>
+                      <td class="py-2.5 font-extrabold text-[#5B45E0]">${p.skor_kuis}</td>
+                    </tr>
+                  `;
+                }).join('')}
+              </tbody>
+            </table>
+          </div>
+        `;
+      }
+
+      return `
+        <div class="bg-white rounded-3xl border border-slate-100 p-5 shadow-soft">
+          <div class="flex flex-wrap items-center gap-2 mb-5 pb-4 border-b border-slate-100">
+            ${tabs.map(t => `
+              <button
+                onclick="window.lmsActions.setAdminTab('${t.id}')"
+                class="px-3.5 py-2 rounded-xl text-xs font-bold transition ${state.adminSubTab === t.id ? 'bg-[#5B45E0] text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}"
+              >
+                ${t.label}
+              </button>
+            `).join('')}
+          </div>
+          ${contentHtml}
+        </div>
+      `;
+    }
+
+    /**
+     * =====================================================================
+     * 14. MODAL PEMUTAR MATERI & KUIS CBT INTERAKTIF
+     * =====================================================================
+     */
+    function renderCourseModal() {
+      const course = state.activeCourseModal;
+      if (!course) return '';
+
+      const questions = state.data.kuis_soal.filter(q => q.course_id === course.id);
+      const isDone = state.role === 'siswa' && state.data.progres_nilai.some(
+        p => p.siswa_id === state.user?.id && p.course_id === course.id && p.status_selesai
+      );
+
+      return `
+        <div class="fixed inset-0 z-[1000001] bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-3 sm:p-6">
+          <div class="bg-white w-full max-w-3xl max-h-[90vh] rounded-3xl shadow-2xl border border-slate-100 flex flex-col overflow-hidden">
+            <!-- Modal Header -->
+            <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between gap-3">
+              <div>
+                <span class="px-2.5 py-0.5 rounded-full bg-[#EEF0FF] text-[#5B45E0] text-[11px] font-bold">
+                  ${escapeHtml(course.mapel)} • ${escapeHtml(course.jenjang)}
+                </span>
+                <h3 class="text-base sm:text-lg font-extrabold text-slate-900 mt-1">${escapeHtml(course.judul)}</h3>
+              </div>
+              <button onclick="window.lmsActions.closeCourse()" class="w-9 h-9 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center shrink-0">
+                <i data-lucide="x" class="w-5 h-5"></i>
+              </button>
+            </div>
+
+            <!-- Tabs Materi vs Kuis CBT -->
+            <div class="px-6 pt-3 border-b border-slate-100 flex items-center gap-4 bg-slate-50/60">
+              <button
+                onclick="window.lmsActions.setCourseTab('materi')"
+                class="pb-3 text-xs sm:text-sm font-bold border-b-2 transition ${state.courseModalTab === 'materi' ? 'border-[#5B45E0] text-[#5B45E0]' : 'border-transparent text-slate-500'}"
+              >
+                1. Modul Pembelajaran
+              </button>
+              <button
+                onclick="window.lmsActions.setCourseTab('kuis')"
+                class="pb-3 text-xs sm:text-sm font-bold border-b-2 transition flex items-center gap-1.5 ${state.courseModalTab === 'kuis' ? 'border-[#5B45E0] text-[#5B45E0]' : 'border-transparent text-slate-500'}"
+              >
+                <span>2. Latihan Kuis CBT</span>
+                <span class="px-2 py-0.5 rounded-full bg-indigo-100 text-[#5B45E0] text-[10px]">${questions.length}</span>
+              </button>
+            </div>
+
+            <!-- Modal Body -->
+            <div class="p-6 overflow-y-auto custom-scroll flex-1 space-y-5">
+              ${state.courseModalTab === 'materi' ? `
+                <div class="flex items-center justify-between text-xs text-slate-500 bg-slate-50 p-3 rounded-2xl">
+                  <span>Pengampu: <strong class="text-slate-800">${escapeHtml(course.guru_pengampu || 'Guru Mapel')}</strong></span>
+                  <span>Estimasi Belajar: <strong class="text-slate-800">${escapeHtml(course.durasi)}</strong></span>
+                </div>
+
+                ${course.video_url ? `
+                  <div class="aspect-video rounded-2xl overflow-hidden bg-slate-900 border border-slate-200">
+                    <iframe src="${escapeHtml(course.video_url)}" class="w-full h-full" allowfullscreen></iframe>
+                  </div>
+                ` : ''}
+
+                <div class="prose prose-sm max-w-none text-slate-700 leading-relaxed whitespace-pre-line text-sm bg-white p-4 rounded-2xl border border-slate-100">
+                  ${escapeHtml(course.konten_materi)}
+                </div>
+
+                <div class="flex flex-wrap items-center justify-between gap-3 pt-2">
+                  <button
+                    onclick="window.lmsActions.completeCourse('${course.id}')"
+                    class="px-5 py-3 rounded-xl ${isDone ? 'bg-emerald-600 text-white' : 'bg-[#5B45E0] hover:bg-[#4328D9] text-white'} text-xs font-bold flex items-center gap-2 transition"
+                  >
+                    <i data-lucide="check-circle-2" class="w-4 h-4"></i>
+                    <span>${isDone ? 'Materi Sudah Selesai (+50 Poin Diterima)' : 'Tandai Selesai & Klaim +50 EduPoints'}</span>
+                  </button>
+                  ${questions.length > 0 ? `
+                    <button
+                      onclick="window.lmsActions.setCourseTab('kuis')"
+                      class="px-4 py-3 rounded-xl bg-[#EEF0FF] text-[#5B45E0] text-xs font-bold hover:bg-indigo-100 transition"
+                    >
+                      Lanjut Kerjakan Kuis →
+                    </button>
+                  ` : ''}
+                </div>
+              ` : `
+                ${questions.length === 0 ? `
+                  <div class="text-center py-10">
+                    <p class="text-sm font-bold text-slate-700">Belum ada soal kuis untuk bab ini</p>
+                    <p class="text-xs text-slate-400 mt-1">Silakan selesaikan bacaan modul terlebih dahulu.</p>
+                  </div>
+                ` : `
+                  ${state.quizSubmitted ? `
+                    <div class="p-5 rounded-2xl bg-[#F5F3FF] border border-indigo-200 text-center">
+                      <div class="text-xs font-bold text-[#5B45E0] uppercase">Hasil Evaluasi CBT</div>
+                      <div class="text-4xl font-extrabold text-slate-900 mt-1">${state.quizScore} <span class="text-base font-bold text-slate-400">/ 100</span></div>
+                      <p class="text-xs text-slate-600 mt-1">Skor telah direkam otomatis ke laporan belajar Anda.</p>
+                    </div>
+                  ` : ''}
+
+                  <div class="space-y-4">
+                    ${questions.map((q, idx) => `
+                      <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200/70 space-y-3">
+                        <p class="text-sm font-bold text-slate-900">${idx + 1}. ${escapeHtml(q.pertanyaan)}</p>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                          ${['A','B','C','D'].map(opt => {
+                            const val = q['opsi_' + opt.toLowerCase()];
+                            const picked = state.quizAnswers[q.id] === opt;
+                            let btnStyle = picked
+                              ? 'bg-[#5B45E0] text-white border-[#5B45E0]'
+                              : 'bg-white text-slate-700 border-slate-200 hover:border-[#5B45E0]';
+
+                            if (state.quizSubmitted) {
+                              if (opt === q.kunci_jawaban) {
+                                btnStyle = 'bg-emerald-600 text-white border-emerald-600';
+                              } else if (picked && opt !== q.kunci_jawaban) {
+                                btnStyle = 'bg-rose-600 text-white border-rose-600';
+                              }
+                            }
+
+                            return `
+                              <button
+                                type="button"
+                                ${state.quizSubmitted ? 'disabled' : ''}
+                                onclick="window.lmsActions.pickAnswer('${q.id}', '${opt}')"
+                                class="text-left p-3 rounded-xl border text-xs font-semibold transition flex items-center gap-2.5 ${btnStyle}"
+                              >
+                                <span class="w-6 h-6 rounded-lg bg-black/10 flex items-center justify-center font-bold shrink-0">${opt}</span>
+                                <span>${escapeHtml(val)}</span>
+                              </button>
+                            `;
+                          }).join('')}
+                        </div>
+                        ${state.quizSubmitted && q.pembahasan ? `
+                          <div class="p-3 rounded-xl bg-emerald-50 text-emerald-800 text-xs">
+                            <strong>Pembahasan:</strong> ${escapeHtml(q.pembahasan)}
+                          </div>
+                        ` : ''}
+                      </div>
+                    `).join('')}
+                  </div>
+
+                  ${!state.quizSubmitted ? `
+                    <button
+                      type="button"
+                      onclick="window.lmsActions.submitQuiz()"
+                      class="w-full py-3.5 rounded-xl bg-[#5B45E0] hover:bg-[#4328D9] text-white text-sm font-bold shadow-lg shadow-indigo-500/20 transition"
+                    >
+                      Kumpulkan Jawaban & Lihat Nilai
+                    </button>
+                  ` : ''}
+                `}
+              `}
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    /**
+     * =====================================================================
+     * 15. MODAL KONFIRMASI KUSTOM (PENGGANTI confirm() BROWSER)
+     * =====================================================================
+     */
+    function renderConfirmModal() {
+      if (!state.confirmModal) return '';
+      return `
+        <div class="fixed inset-0 z-[1000003] bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4">
+          <div class="bg-white w-full max-w-sm rounded-3xl p-6 shadow-2xl border border-slate-100 text-center">
+            <div class="w-12 h-12 rounded-2xl bg-indigo-50 text-[#5B45E0] flex items-center justify-center mx-auto mb-3">
+              <i data-lucide="alert-circle" class="w-6 h-6"></i>
+            </div>
+            <h4 class="text-base font-extrabold text-slate-900">${escapeHtml(state.confirmModal.title)}</h4>
+            <p class="text-xs text-slate-500 mt-1.5 leading-relaxed">${escapeHtml(state.confirmModal.message)}</p>
+            <div class="grid grid-cols-2 gap-2.5 mt-5">
+              <button onclick="window.lmsActions.closeConfirm()" class="py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition">
+                Batal
+              </button>
+              <button onclick="window.lmsActions.executeConfirm()" class="py-2.5 rounded-xl bg-[#5B45E0] hover:bg-[#4328D9] text-white text-xs font-bold transition">
+                Ya, Lanjutkan
+              </button>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    /**
+     * =====================================================================
+     * 16. RENDER UTAMA SHELL DASHBOARD (PERSIS REFERENSI GAMBAR)
+     * =====================================================================
+     */
+    function renderDashboardShell() {
+      const navItems = [
+        { id: 'dashboard', label: 'Dashboard', icon: 'home' },
+        { id: 'courses', label: 'Courses', icon: 'book-open' },
+        { id: 'tools', label: 'Tools', icon: 'wrench' },
+        { id: 'template', label: 'Template', icon: 'archive' },
+        { id: 'market', label: 'Market', icon: 'store' },
+        { id: 'schedule', label: 'Schedule', icon: 'video' },
+        { id: 'help', label: 'Help / FAQ', icon: 'help-circle' }
+      ];
+
+      if (state.role === 'admin') {
+        navItems.push({ id: 'admin_panel', label: 'Kelola LMS', icon: 'settings' });
+      }
+
+      const pageTitles = {
+        dashboard: 'Dashboard',
+        courses: 'Courses & Mapel SMP',
+        tools: 'Tools & Lab Virtual',
+        template: 'Template & LKPD',
+        market: 'Market EduPoints',
+        schedule: 'Schedule & Live Class',
+        help: 'Help / FAQ',
+        admin_panel: 'Panel Manajemen Guru'
+      };
+
+      const highlightLive = state.data.jadwal_live.find(j => j.is_highlight) || state.data.jadwal_live[0];
+      const userName = state.user?.nama_lengkap || 'Peserta SMP';
+      const userSub = state.role === 'admin'
+        ? (state.user?.jabatan || 'Guru / Admin')
+        : `${state.user?.kelas || 'Siswa SMP'} • ${state.user?.poin || 0} Poin`;
+
+      let activeContent = '';
+      switch (state.activeMenu) {
+        case 'dashboard': activeContent = renderDashboardPage(); break;
+        case 'courses': activeContent = renderCoursesPage(); break;
+        case 'tools': activeContent = renderToolsPage(); break;
+        case 'template': activeContent = renderTemplatePage(); break;
+        case 'market': activeContent = renderMarketPage(); break;
+        case 'schedule': activeContent = renderSchedulePage(); break;
+        case 'help': activeContent = renderHelpPage(); break;
+        case 'admin_panel': activeContent = renderAdminPanelPage(); break;
+        default: activeContent = renderDashboardPage();
+      }
+
+      return `
+        <div class="w-full h-full flex overflow-hidden bg-[#F7F8FC]">
+          <!-- ===============================================================
+               KOLOM 1: LEFT SIDEBAR (DESKTOP)
+               =============================================================== -->
+          <aside class="desktop-sidebar w-[245px] shrink-0 bg-white border-r border-slate-100 flex-col justify-between p-5 overflow-y-auto custom-scroll">
+            <div>
+              <!-- Brand Logo -->
+              <div class="flex items-center gap-3 px-2 mb-7">
+                <div class="w-10 h-10 rounded-xl bg-[#5B45E0] text-white flex items-center justify-center shadow-md shadow-indigo-500/20">
+                  <i data-lucide="graduation-cap" class="w-5 h-5"></i>
+                </div>
+                <div>
+                  <span class="text-lg font-extrabold text-slate-900 tracking-tight block leading-none">Academy</span>
+                  <span class="text-[10px] font-bold text-[#5B45E0] tracking-wider uppercase">SMP Smart LMS</span>
+                </div>
+              </div>
+
+              <!-- Menu Navigasi Utama -->
+              <nav class="space-y-1.5">
+                ${navItems.map(item => {
+                  const active = state.activeMenu === item.id;
+                  return `
+                    <button
+                      onclick="window.lmsActions.setMenu('${item.id}')"
+                      class="w-full flex items-center gap-3.5 px-3.5 py-2.5 rounded-xl text-[13.5px] transition ${active ? 'bg-[#EEF0FF] text-[#5B45E0] font-bold' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800 font-medium'}"
+                    >
+                      <i data-lucide="${item.icon}" class="w-[18px] h-[18px] ${active ? 'text-[#5B45E0]' : 'text-slate-400'}"></i>
+                      <span>${item.label}</span>
+                    </button>
+                  `;
+                }).join('')}
+              </nav>
+            </div>
+
+            <!-- Promo / Highlight Card Bawah Sidebar (Sesuai Referensi Gambar) -->
+            <div class="mt-6 pt-4">
+              <div class="relative bg-[#F5F3FF] border border-indigo-100 rounded-2xl p-4 text-center pt-7">
+                <div class="w-10 h-10 rounded-xl bg-white shadow-sm border border-indigo-100 text-[#5B45E0] flex items-center justify-center mx-auto absolute -top-5 left-1/2 -translate-x-1/2">
+                  <i data-lucide="laptop" class="w-5 h-5"></i>
+                </div>
+                <h4 class="text-xs font-extrabold text-slate-900">SMP Smart LMS V2</h4>
+                <p class="text-[11px] text-slate-500 mt-1 leading-relaxed">
+                  Akselerasi prestasi akademik & literasi digital siswa SMP
+                </p>
+                <button
+                  onclick="window.lmsActions.setMenu('courses')"
+                  class="w-full mt-3.5 py-2.5 rounded-xl bg-[#5B45E0] hover:bg-[#4328D9] text-white text-xs font-bold shadow-sm transition"
+                >
+                  Pelajari Modul
+                </button>
+              </div>
+            </div>
+          </aside>
+
+          <!-- ===============================================================
+               KOLOM 2: CENTER WORKSPACE
+               =============================================================== -->
+          <main class="flex-1 h-full overflow-y-auto custom-scroll main-scroll-area px-4 sm:px-7 py-5">
+            ${IS_PREVIEW ? `
+              <div class="mb-4 px-3.5 py-2 rounded-2xl bg-amber-50 border border-amber-200/80 text-amber-800 text-xs font-semibold flex items-center justify-between gap-2">
+                <div class="flex items-center gap-2">
+                  <span class="w-2 h-2 rounded-full bg-amber-500"></span>
+                  <span><strong>Mode Preview Aktif:</strong> Menggunakan data uji lokal. Ubah <code class="bg-amber-100 px-1 rounded">IS_PREVIEW = false</code> untuk koneksi Supabase live.</span>
+                </div>
+              </div>
+            ` : ''}
+
+            <!-- Top Header Bar -->
+            <header class="flex flex-wrap items-center justify-between gap-3 mb-6">
+              <div class="flex items-center gap-3">
+                <div class="lg:hidden w-9 h-9 rounded-xl bg-[#5B45E0] text-white flex items-center justify-center">
+                  <i data-lucide="graduation-cap" class="w-5 h-5"></i>
+                </div>
+                <h1 class="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">
+                  ${pageTitles[state.activeMenu] || 'Dashboard'}
+                </h1>
+              </div>
+
+              <div class="flex items-center gap-2.5 flex-1 sm:flex-initial justify-end">
+                <!-- Capsule Search Bar -->
+                <div class="relative flex-1 sm:w-64 max-w-xs">
+                  <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2"></i>
+                  <input
+                    type="text"
+                    value="${escapeHtml(state.searchQuery)}"
+                    oninput="window.lmsActions.search(this.value)"
+                    placeholder="Search courses, tools..."
+                    class="w-full pl-9 pr-4 py-2 rounded-full bg-white border border-slate-200 text-xs font-medium text-slate-700 placeholder:text-slate-400 focus:outline-none focus:border-[#5B45E0] transition"
+                  />
+                </div>
+
+                <!-- Role Pill Badge -->
+                <button
+                  onclick="window.lmsActions.toggleMobileUtility()"
+                  class="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-[#EEF0FF] text-[#5B45E0] text-xs font-bold"
+                >
+                  <i data-lucide="user" class="w-3.5 h-3.5"></i>
+                  <span>${state.role === 'admin' ? 'Guru/Admin' : (state.user?.kelas || 'Peserta')}</span>
+                </button>
+
+                <!-- Logout Icon Button -->
+                <button
+                  onclick="window.lmsActions.logout()"
+                  title="Keluar"
+                  class="w-9 h-9 rounded-xl bg-white hover:bg-rose-50 text-slate-600 hover:text-rose-600 border border-slate-200 flex items-center justify-center transition shrink-0"
+                >
+                  <i data-lucide="log-out" class="w-4 h-4"></i>
+                </button>
+              </div>
+            </header>
+
+            <!-- Konten Dinamis -->
+            ${state.loading ? `
+              <div class="py-20 flex flex-col items-center justify-center text-slate-400">
+                <div class="w-8 h-8 border-4 border-[#5B45E0] border-t-transparent rounded-full animate-spin mb-3"></div>
+                <span class="text-xs font-semibold">Menyelaraskan data pembelajaran...</span>
+              </div>
+            ` : activeContent}
+          </main>
+
+          <!-- ===============================================================
+               KOLOM 3: RIGHT UTILITY PANEL (DESKTOP XL)
+               =============================================================== -->
+          <aside class="desktop-right-panel w-[295px] shrink-0 bg-white border-l border-slate-100 p-5 flex-col justify-between gap-5 overflow-y-auto custom-scroll">
+            <div class="space-y-5">
+              <!-- Kartu Profil Pengguna -->
+              <div class="flex flex-col items-center text-center pt-2">
+                <div class="relative mb-3">
+                  <div class="w-16 h-16 rounded-full bg-[#EEF0FF] text-[#5B45E0] flex items-center justify-center border-4 border-indigo-50">
+                    <i data-lucide="bot" class="w-8 h-8"></i>
+                  </div>
+                  <span class="w-5 h-5 rounded-full bg-blue-500 text-white flex items-center justify-center absolute bottom-0 right-0 border-2 border-white">
+                    <i data-lucide="check" class="w-3 h-3"></i>
+                  </span>
+                </div>
+                <h3 class="text-sm font-extrabold text-slate-900">${escapeHtml(userName)}</h3>
+                <p class="text-xs text-slate-400 font-medium mt-0.5">${escapeHtml(userSub)}</p>
+              </div>
+
+              <!-- Kalender Bulanan Interaktif -->
+              ${renderCalendarWidget()}
+            </div>
+
+            <!-- Kartu Sesi Live Mentoring (Gradient Ungu + Tombol Gelap) -->
+            <div class="live-card-gradient rounded-2xl p-4 text-white shadow-lg shadow-indigo-500/20">
+              <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/20 text-[11px] font-bold mb-3">
+                <i data-lucide="video" class="w-3.5 h-3.5"></i>
+                <span>Sesi Live Mentoring</span>
+              </div>
+              <h4 class="text-sm font-extrabold leading-snug">
+                ${escapeHtml(highlightLive?.judul_sesi || 'Praktik & Bimbingan Belajar SMP')}
+              </h4>
+              <p class="text-[11px] text-indigo-100 mt-1">
+                ${escapeHtml(highlightLive?.pengajar || 'Tim Guru SMP')} • ${escapeHtml(highlightLive?.waktu_wib || 'Setiap Hari, 19.30 WIB')}
+              </p>
+              <a
+                href="${escapeHtml(highlightLive?.link_meeting || '#')}"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="mt-4 w-full py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold flex items-center justify-center transition"
+              >
+                Gabung Sesi Live
+              </a>
+            </div>
+          </aside>
+
+          <!-- ===============================================================
+               MOBILE FLOATING BOTTOM NAVIGATION BAR (GLASSMORPHISM)
+               =============================================================== -->
+          <nav class="mobile-bottom-nav fixed bottom-3 left-3 right-3 z-[1000000] glass-nav-mobile rounded-2xl px-2 py-2 items-center justify-around">
+            ${navItems.slice(0, 5).map(item => {
+              const active = state.activeMenu === item.id;
+              return `
+                <button
+                  onclick="window.lmsActions.setMenu('${item.id}')"
+                  class="flex flex-col items-center justify-center py-1 px-2.5 rounded-xl transition ${active ? 'bg-[#EEF0FF] text-[#5B45E0]' : 'text-slate-500'}"
+                >
+                  <i data-lucide="${item.icon}" class="w-5 h-5"></i>
+                  <span class="text-[10px] font-bold mt-0.5">${item.label}</span>
+                </button>
+              `;
+            }).join('')}
+            ${state.role === 'admin' ? `
+              <button
+                onclick="window.lmsActions.setMenu('admin_panel')"
+                class="flex flex-col items-center justify-center py-1 px-2.5 rounded-xl transition ${state.activeMenu === 'admin_panel' ? 'bg-[#EEF0FF] text-[#5B45E0]' : 'text-slate-500'}"
+              >
+                <i data-lucide="settings" class="w-5 h-5"></i>
+                <span class="text-[10px] font-bold mt-0.5">Admin</span>
+              </button>
+            ` : `
+              <button
+                onclick="window.lmsActions.setMenu('schedule')"
+                class="flex flex-col items-center justify-center py-1 px-2.5 rounded-xl transition ${state.activeMenu === 'schedule' ? 'bg-[#EEF0FF] text-[#5B45E0]' : 'text-slate-500'}"
+              >
+                <i data-lucide="video" class="w-5 h-5"></i>
+                <span class="text-[10px] font-bold mt-0.5">Live</span>
+              </button>
+            `}
+          </nav>
+        </div>
+
+        ${renderCourseModal()}
+        ${renderConfirmModal()}
+      `;
+    }
+
+    /**
+     * =====================================================================
+     * 17. MASTER RENDER & EXPOSE GLOBAL EVENT HANDLERS
+     * =====================================================================
+     */
+    function renderApp() {
+      const root = document.getElementById('lms-root-app');
+      if (!root) return;
+
+      if (!state.isAuthenticated) {
+        root.innerHTML = renderLoginView() + renderConfirmModal();
+      } else {
+        root.innerHTML = renderDashboardShell();
+      }
+
+      if (window.lucide) {
+        window.lucide.createIcons();
+      }
+    }
+
+    window.lmsActions = {
+      switchLoginTab: (tab) => {
+        state.loginTab = tab;
+        renderApp();
+      },
+      submitLogin: handleLoginSubmit,
+      quickLogin: quickPreviewLogin,
+      logout: handleLogout,
+      setMenu: (menu) => {
+        state.activeMenu = menu;
+        renderApp();
+      },
+      setAdminTab: (tab) => {
+        state.adminSubTab = tab;
+        renderApp();
+      },
+      search: (val) => {
+        state.searchQuery = val;
+        renderApp();
+      },
+      setFilterJenjang: (jenjang) => {
+        state.filterJenjang = jenjang;
+        renderApp();
+      },
+      changeMonth: changeCalendarMonth,
+      selectDay: (day) => {
+        state.selectedDay = day;
+        renderApp();
+      },
+      openCourse: openCoursePlayer,
+      closeCourse: closeCoursePlayer,
+      setCourseTab: (tab) => {
+        state.courseModalTab = tab;
+        renderApp();
+      },
+      completeCourse: (courseId) => markCourseCompleted(courseId),
+      pickAnswer: (qId, opt) => {
+        state.quizAnswers[qId] = opt;
+        renderApp();
+      },
+      submitQuiz: submitCbtQuiz,
+      redeem: redeemReward,
+      pressCalc: (btn) => {
+        if (btn === 'C') {
+          state.calcInput = '';
+          state.calcResult = '0';
+        } else if (btn === '=') {
+          try {
+            // Evaluasi aman hanya karakter matematika dasar
+            const sanitized = state.calcInput.replace(/[^0-9+\-*/.]/g, '');
+            if (sanitized) {
+              const res = Function('"use strict";return (' + sanitized + ')')();
+              state.calcResult = String(Number(res.toFixed(4)));
+            }
+          } catch {
+            state.calcResult = 'Error';
+          }
+        } else {
+          state.calcInput += btn;
+        }
+        renderApp();
+      },
+      updateTemp: (val) => {
+        state.tempCelsius = val;
+        renderApp();
+      },
+      adminCreateCourse: handleAdminCreateCourse,
+      adminCreateSiswa: handleAdminCreateSiswa,
+      adminCreateSoal: handleAdminCreateSoal,
+      adminCreatePustaka: handleAdminCreatePustaka,
+      adminCreateJadwal: handleAdminCreateJadwal,
+      adminDelete: handleAdminDeleteRecord,
+      closeConfirm: closeConfirmDialog,
+      executeConfirm: () => {
+        if (state.confirmModal && typeof state.confirmModal.onConfirm === 'function') {
+          state.confirmModal.onConfirm();
+        }
+      },
+      toggleMobileUtility: () => {
+        showToast(`${state.user?.nama_lengkap} (${state.role === 'admin' ? 'Guru/Admin' : state.user?.kelas})`, 'info');
+      }
+    };
+
+    // Jalankan inisialisasi pertama saat DOM siap
+    checkInitialSession();
+  </script>
+</body>
+</html>
